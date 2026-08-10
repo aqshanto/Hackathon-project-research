@@ -1,0 +1,8 @@
+- Dataset size : 
+- Columns
+- Transaction types
+- Missing values
+- Duplicates
+- Important features
+- Potential leakage columns
+- Dataset limitations
