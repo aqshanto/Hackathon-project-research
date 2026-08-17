@@ -1,21 +1,61 @@
-- আমাদের first paper-এর scope কি শুধু model comparison হবে, নাকি routing system evaluation-ও থাকবে?
-- Heavy/Light ground truth কীভাবে define করলে academically valid হবে?
-- Synthetic dataset কি যথেষ্ট, নাকি external dataset অবশ্যই দরকার?
-- Human-reviewed retraining first paper-এ রাখব, নাকি future work করব?
-- আমাদের target initially student conference, workshop, নাকি full conference paper হওয়া উচিত?
-- Safe reroute and surge fairness এই paper-এ রাখব, নাকি separate paper হিসেবে রাখব?
-- Mentor এবং team member-দের authorship order কীভাবে নির্ধারণ করা হবে?
-# Questions for Mentor - Version 0.2
+# Questions for Mentor - Current Status After Research Day 2
 
-1. Do you approve the revised primary task: node-aware `service_time_ms` regression instead of fixed Heavy/Light classification?
-2. Should the first paper include both model comparison and winner-model routing evaluation?
-3. Is the proposed FinCluster reference processing pipeline academically acceptable if it is clearly presented as a reproducible simulation rather than a universal bank pipeline?
-4. Which processing stages should be added, removed, or modified before measurement?
-5. Which controlled Docker node profiles should be used for the pilot experiment?
-6. Should node runtime conditions such as queue length and current CPU load be included in the first model, or should the first benchmark use static controlled profiles only?
-7. Which exact PaySim source/version and license should be selected?
-8. What transaction sample size is realistic for repeated execution across all node profiles?
-9. Should optional node degradation and node failure remain in the first paper or become future work?
-10. Is the proposed set of regression models sufficient and fair?
-11. What paper type should be targeted first: student conference, workshop, short paper, or full conference paper?
-12. How should author roles and author order be determined?
+## Answered / Direction Received
+
+### 1. Dataset source
+
+**Question:** Should PaySim be used as the transaction source?
+
+**Mentor direction:** Yes, PaySim is preferred.
+
+### 2. Primary target
+
+**Question:** Is measured `service_time_ms` stronger than handcrafted Heavy/Light labels?
+
+**Mentor direction:** Measuring service time is better.
+
+### 3. Repeated execution
+
+**Question:** Can the same transaction-node pair be executed multiple times for stable timing?
+
+**Mentor direction:** Yes, if it improves the algorithm/measurement quality.
+
+### 4. Development scope vs research scope
+
+**Question:** Must unrelated project features be removed to keep the research paper narrow?
+
+**Mentor direction:** No. A focused research contribution does not require deleting other development features.
+
+### 5. Transaction identity and split
+
+**Mentor direction:** Use a unique transaction ID, and keep all node-level observations for the same transaction together in one train/test group.
+
+### 6. Models and metrics
+
+**Mentor direction:** Maintain strong research quality; compare as many justified models as feasible and include relevant metrics that strengthen the paper.
+
+### 7. Evaluation order
+
+**Mentor direction:** First complete prediction/model evaluation; then perform system-level experiments.
+
+### 8. Routing baselines
+
+**Mentor direction:** Use multiple baselines.
+
+### 9. ACID
+
+**Mentor direction:** Keep ACID properties; this is technically correct.
+
+## Remaining Questions for the Next Mentor Meeting
+
+1. What exact security/authentication/authorization operations should the reference pipeline simulate so that the measurement remains defensible without claiming a real-bank security stack?
+2. Do you approve the current baseline pipeline with risk-model inference disabled until a later version?
+3. What Low/Medium/High Docker CPU and memory limits should be used, or should we determine them from a pilot based on the host machine?
+4. Should the first model benchmark use only static node-profile features, or also dynamic queue/CPU-utilization features?
+5. Is the proposed grouped split by `transaction_id` sufficient, and should a temporal holdout using PaySim `step` also be reported?
+6. Should Light/Moderate/Heavy remain only a secondary visualization? If retained, should we evaluate K-Means/GMM/Agglomerative clustering rather than setting arbitrary thresholds?
+7. Should node degradation and complete node failure be included in paper 1 or left as an extension?
+8. Should human-reviewed retraining remain future work for this paper?
+9. What publication type should be targeted first?
+10. How should author roles/order and mentor contribution be documented?
+11. After the 10-transaction pilot, what variance/stability criterion should we use to decide whether 5 measured repetitions are sufficient?

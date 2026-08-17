@@ -1,88 +1,97 @@
-# External Dataset Candidate - Version 0.2
+# External Dataset Candidate - Version 0.2 (Updated Status)
 
-## Candidate
+## Current Decision
 
-A PaySim-style synthetic mobile-money transaction dataset hosted on a documented public platform, with the exact repository/version and license to be verified before experimentation.
+The mentor recommended **PaySim** as the preferred transaction-data source.
 
-Current inspection candidate:
+A local file has been identified:
+
+```text
+PS_20174392719_1491204439457_log.csv
+```
+
+The exact provenance, download source, dataset version, and license for this local copy must still be verified and recorded before final experimentation/publication.
+
+## Previously Noted Public Candidate
 
 ```text
 purulalwani/Synthetic-Financial-Datasets-For-Fraud-Detection
 ```
 
-## Why It Is Relevant
+This remains a previously discussed hosting candidate, but the project must not assume that the local CSV came from this exact host/version unless that provenance is verified.
 
-- mobile-money transaction context;
+## Why PaySim Is Relevant
+
+- synthetic mobile-money transaction context;
 - multiple transaction types;
-- amounts and account-balance fields;
-- external transaction distribution rather than a team-created random generator;
-- privacy-safe synthetic records;
-- reproducible public access, subject to source/version verification.
+- transaction amounts and balance fields;
+- privacy-safe data suitable for controlled research;
+- provides transaction distributions independently of the FinCluster timing experiment.
+
+## Current Local Schema Facts
+
+- local filename identified;
+- 11 columns observed/expected;
+- transaction types observed: `CASH_IN`, `CASH_OUT`, `DEBIT`, `PAYMENT`, `TRANSFER`;
+- no verified VPN feature;
+- full programmatic inspection still pending.
 
 ## Important Limitation
 
-The dataset contains fraud-related fields. It does **not** contain:
+PaySim does **not** provide:
 
 - transaction-processing latency;
 - CPU demand;
 - memory demand;
 - node-profile measurements;
-- a validated Heavy/Light workload label.
+- a validated Light/Moderate/Heavy processing-workload label.
 
-The fraud label must not be used directly as a workload or latency target.
+Fraud labels must not be converted directly into workload labels.
 
 ## Proposed Use
 
-PaySim supplies transaction attributes and distribution. FinCluster supplies measured execution labels.
-
 ```text
 PaySim transaction row
--> FinCluster reference processing pipeline
+-> assign FinCluster transaction_id
+-> execute FinCluster reference processing pipeline
 -> controlled node profile
--> measured service_time_ms
+-> repeated measurements
+-> median measured service_time_ms
+-> regression research dataset
 ```
 
-The resulting research dataset will combine:
+## Initial Candidate Transaction Inputs
 
-- pre-routing transaction features;
-- controlled node-profile features;
-- measured service-time target;
-- supporting resource and stage-level measurements.
+- `type`
+- `amount`
+- `oldbalanceOrg`
+- `oldbalanceDest`
+- `step` (candidate)
 
-## Expected Transaction Types
+## Initial Exclusions
 
-The exact transaction types will be confirmed after inspection of the selected dataset version. No type will be permanently labelled Heavy or Light solely by name.
-
-## Leakage Risks to Review
-
+- `nameOrig`
+- `nameDest`
+- `newbalanceOrig`
+- `newbalanceDest`
 - `isFraud`
 - `isFlaggedFraud`
-- post-transaction balance fields
-- raw source/destination identifiers
-- any field that is unavailable at routing time
+
+The raw source file remains unchanged; exclusion applies only to model input.
 
 ## Required Inspection Outputs
 
-- row count or official metadata count;
-- column names;
-- data types;
+- exact row count;
+- exact column names and dtypes;
 - missing values;
-- duplicate rows in the inspected sample;
+- blank strings;
+- sample duplicate count;
 - transaction-type distribution;
 - fraud-label distribution;
 - amount distribution;
 - identifier cardinality;
-- license and provenance notes.
-
-## Questions to Resolve With the Mentor
-
-1. Which exact PaySim repository/version should be used?
-2. Does the selected source provide a clear license and provenance?
-3. Should the full dataset or a reproducible sample be used?
-4. Which pre-routing features are methodologically valid?
-5. How many transaction rows are feasible for the controlled execution experiment?
-6. Should the external dataset be the primary source or an external-validation source?
+- exact provenance/version/license notes.
 
 ## Current Status
 
-Dataset selected as a candidate only. Inspection has not yet been completed and no model has been trained on it.
+**Mentor-preferred dataset family; local file identified; partial schema inspection completed; full programmatic inspection and provenance/license verification pending.**

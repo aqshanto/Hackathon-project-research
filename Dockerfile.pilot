@@ -1,0 +1,15 @@
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+RUN pip install --no-cache-dir pandas==2.2.3
+
+RUN mkdir -p /app/Research/scripts /app/Research/data/raw /app/Research/data/processed /app/Research/results
+
+COPY scripts/reference_processor.py /app/Research/scripts/reference_processor.py
+COPY scripts/run_service_time_pilot.py /app/Research/scripts/run_service_time_pilot.py
+
+ENTRYPOINT ["python", "Research/scripts/run_service_time_pilot.py"]

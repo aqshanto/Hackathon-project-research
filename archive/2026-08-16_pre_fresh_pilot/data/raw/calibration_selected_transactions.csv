@@ -1,0 +1,6 @@
+transaction_id                      , source_row_index, step, type    , amount   , nameOrig   , oldbalanceOrg, nameDest   , oldbalanceDest
+94dc0552-c337-5087-9d12-6ab55c270d00,              389,    1, CASH_IN , 143236.26, C1862994526,           0.0, C1688019098,      608932.17
+84bc550d-9bc7-5b80-81d3-906a3d089c2c,                3,    1, CASH_OUT,    181.0 , C840083671 ,         181.0, C38997010  ,       21182.0
+84b2de13-d56e-5802-bbea-6a9c126d197a,                9,    1, DEBIT   ,   5337.77, C712410124 ,       41720.0, C195600860 ,       41898.0
+4c47fd72-93b9-5bbe-8da2-5611d12202e7,                0,    1, PAYMENT ,   9839.64, C1231006815,      170136.0, M1979787155,           0.0
+538a51c5-17e0-5514-b8f8-4932adef1d87,                2,    1, TRANSFER,    181.0 , C1305486145,         181.0, C553264065 ,           0.0

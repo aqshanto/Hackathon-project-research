@@ -69,3 +69,21 @@
 - quality-gated model retraining
 - concept drift transaction processing
 - online adaptation latency prediction
+
+## Category 9 - Workload Banding and Clustering (Secondary Analysis)
+
+- service time clustering
+- execution time clustering machine learning
+- K-Means latency clustering
+- workload characterization clustering
+- Gaussian mixture workload clustering
+- cluster validity silhouette Davies Bouldin latency
+
+## Category 10 - Transaction Integrity and Security-Aware Processing
+
+- ACID financial transaction processing
+- idempotency payment transaction processing
+- exactly-once payment transaction semantics
+- secure transaction processing latency
+- authentication overhead transaction processing
+- database transaction commit rollback latency

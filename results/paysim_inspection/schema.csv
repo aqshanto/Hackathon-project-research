@@ -1,0 +1,12 @@
+column,dtype
+step,int64
+type,str
+amount,float64
+nameOrig,str
+oldbalanceOrg,float64
+newbalanceOrig,float64
+nameDest,str
+oldbalanceDest,float64
+newbalanceDest,float64
+isFraud,int64
+isFlaggedFraud,int64

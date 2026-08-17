@@ -1,0 +1,24 @@
+{
+  "source": "C:\\Users\\abdul\\Desktop\\code\\Hackathon Project\\Research\\data\\raw\\PS_20174392719_1491204439457_log.csv",
+  "inspection_scope": "full_local_csv_for_row_missing_blank_type_label_counts",
+  "exact_full_data_rows_if_available": 6362620,
+  "exploratory_sample_rows": 100000,
+  "column_count": 11,
+  "columns": [
+    "step",
+    "type",
+    "amount",
+    "nameOrig",
+    "oldbalanceOrg",
+    "newbalanceOrig",
+    "nameDest",
+    "oldbalanceDest",
+    "newbalanceDest",
+    "isFraud",
+    "isFlaggedFraud"
+  ],
+  "random_seed_for_streaming": 42,
+  "sample_size_limit": 100000,
+  "full_scan_requested": true,
+  "important_note": "Fraud labels were inspected only; they were not converted into workload labels."
+}

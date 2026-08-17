@@ -1,0 +1,7 @@
+{
+  "scope": "bounded_exploratory_sample",
+  "sample_rows": 100000,
+  "duplicate_rows": 0,
+  "duplicate_percent": 0.0,
+  "note": "This is not claimed as an exact full-file duplicate count."
+}

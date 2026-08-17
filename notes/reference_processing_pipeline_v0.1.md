@@ -1,241 +1,204 @@
 # FinCluster Reference Transaction Processing Pipeline v0.1
 
-## Important Note
+## Purpose and Boundary
 
-This pipeline is a controlled reference implementation designed for
-FinCluster research experiments.
+This is a controlled reference implementation for FinCluster research experiments.
 
-It does not claim to reproduce the exact internal processing pipeline
-of every real-world bank or Mobile Financial Services provider.
+It does **not** claim to reproduce the exact private processing pipeline of every bank or Mobile Financial Services provider.
 
-The transaction semantics are aligned with the PaySim transaction model
-and documented mobile-money use cases.
+The same locked pipeline version must be used across all node profiles in one experiment so that performance differences are attributable to the controlled environment rather than different correctness/security logic.
 
----
+## Security and Integrity Rule
 
-# Common Stages
+Security and integrity work must not be selectively disabled to make one node/profile appear faster.
 
-These stages are performed for every transaction type.
+The baseline pipeline includes a documented security/authentication/authorization control stage. Because PaySim does not contain real credentials, this stage is a controlled reference operation rather than real customer authentication.
 
-1. Schema validation
-2. Transaction-ID / idempotency / duplicate check
-3. Initiating account or party lookup
-4. Basic transaction validation
+ACID database behavior remains part of the design for state-changing operations.
+
+## Timing Boundary
+
+For the baseline measurement dataset:
+
+```text
+T0: immediately before the first reference-pipeline server-side processing stage
+T1: after commit/rollback and the final response-generation work included by the locked pipeline
+service_time_ms = (T1 - T0) in milliseconds
+```
+
+Client/network delay and queue waiting are excluded from this regression target.
+
+## Common Stages
+
+1. Request/schema validation
+2. Controlled authentication/authorization/security validation
+3. Unique transaction-ID / idempotency / duplicate check
+4. Initiating account/party lookup
+5. Basic transaction and transaction-type validation
 
 ### Schema Validation
 
-The stage exists for every transaction, but the required fields may
-differ according to transaction type.
-
-Examples:
-
-- CASH_IN requires customer and agent/merchant information.
-- CASH_OUT requires customer and agent/merchant information.
-- DEBIT requires customer and destination bank information.
-- PAYMENT requires customer and merchant information.
-- TRANSFER requires source and destination customer information.
-
 Common checks may include:
 
-- Transaction ID exists
-- Transaction type is supported
-- Amount exists and is positive
-- Required account identifiers exist
-- Required transaction fields are correctly formatted
+- transaction ID exists;
+- transaction type is supported;
+- amount exists and is positive;
+- required account/entity identifiers exist;
+- required fields match the transaction type;
+- values are correctly formatted.
 
----
+### Unique Transaction Identity
 
-# Conditional Stages
+Every experimental transaction receives a stable unique `transaction_id`.
 
-These stages are executed depending on the transaction type and
-transaction conditions.
+The ID is used for:
 
-5. Destination / merchant / agent / bank lookup
-6. Balance or fund-availability validation
-7. Transaction-limit and policy validation
-8. Risk-model inference when required
-9. Additional verification when required
+- idempotency/duplicate checks;
+- grouping all node observations for train/validation/test splitting;
+- traceability;
+- later safe-reroute/attempt tracking.
 
-Risk-model inference and additional verification are not automatically
-executed simply because a transaction belongs to a particular type.
+It is not used as an ML predictor.
 
-They should be triggered by a documented processing policy using
-information available before transaction completion.
+## Conditional Processing Stages
 
----
+Depending on transaction type and documented policy:
 
-# Completion Stages
+6. destination / merchant / agent / bank lookup;
+7. balance/fund-availability validation;
+8. transaction-limit and policy validation;
+9. additional verification when required.
 
-For transactions that modify balances or financial state:
+Risk-model inference is **not** part of the baseline v0.1 timing pipeline unless a later experiment explicitly enables and documents it. This prevents introducing a second ML problem before the latency-prediction methodology is validated.
 
-10. Begin database transaction
-11. Apply required balance/state changes
-12. Ledger record creation/update
-13. Audit-log write
-14. Commit on success or rollback on failure
-15. Response generation
+## ACID Completion Stages
 
-The database transaction groups related state-changing operations so
-that partial financial updates are not treated as successful
-transactions.
+For state-changing transactions:
 
----
+10. begin database transaction;
+11. apply required debit/credit/state changes;
+12. create/update ledger record;
+13. write audit record;
+14. commit on success or roll back on failure;
+15. generate final processing response.
+
+### ACID Interpretation
+
+- **Atomicity:** all related financial state changes succeed together or roll back together.
+- **Consistency:** defined balance/ledger invariants remain valid.
+- **Isolation:** concurrent transactions should not create invalid shared state.
+- **Durability:** committed test state persists according to the chosen database setup.
+
+Idempotency is separate from ACID and protects against processing one transaction successfully more than once.
 
 # Transaction-Type Processing Paths
 
 ## CASH_IN
 
-Purpose:
-Add money to a customer's mobile-money balance through a cash-in
-operation.
-
-### Processing Stages
+Purpose: add money to a customer's mobile-money balance through a cash-in operation.
 
 1. Schema validation
-2. Transaction-ID / idempotency / duplicate check
-3. Customer account lookup
-4. Basic transaction validation
-5. Agent / merchant lookup
-6. Transaction-limit and policy validation
-7. Risk screening — optional extension (disabled in baseline v0.1) by policy
-8. Additional verification if required
+2. Controlled authentication/authorization/security validation
+3. Transaction-ID / idempotency / duplicate check
+4. Customer account lookup
+5. Basic transaction validation
+6. Agent/merchant lookup
+7. Transaction-limit and policy validation
+8. Additional verification if required by the locked policy
 9. Begin database transaction
-10. Credit the customer wallet
-11. Ledger record creation/update
+10. Credit customer wallet
+11. Ledger update
 12. Audit-log write
-13. Commit on success or rollback on failure
+13. Commit or rollback
 14. Response generation
 
-### Important Difference
-
-A normal source-balance sufficiency check is not required in the same
-way as CASH_OUT because CASH_IN increases the customer's wallet balance.
-
-If agent float or liquidity is simulated in a later version of the
-FinCluster pipeline, agent-float validation may be added as a separate
-stage.
-
----
+A normal customer source-balance sufficiency check is not required in the same way as CASH_OUT because the customer balance is being increased. Agent-float validation may be added only in a later explicitly versioned pipeline.
 
 ## CASH_OUT
 
-Purpose:
-Withdraw money from a customer's mobile-money balance through an
-agent/merchant.
-
-### Processing Stages
+Purpose: withdraw money from a customer's mobile-money balance through an agent/merchant.
 
 1. Schema validation
-2. Transaction-ID / idempotency / duplicate check
-3. Customer account lookup
-4. Basic transaction validation
-5. Agent / merchant lookup
-6. Customer balance / fund-availability validation
-7. Transaction-limit and policy validation
-8. Risk screening — optional extension (disabled in baseline v0.1) by policy
-9. Additional verification if required
+2. Controlled authentication/authorization/security validation
+3. Transaction-ID / idempotency / duplicate check
+4. Customer account lookup
+5. Basic transaction validation
+6. Agent/merchant lookup
+7. Customer balance/fund-availability validation
+8. Transaction-limit and policy validation
+9. Additional verification if required by the locked policy
 10. Begin database transaction
-11. Debit the customer wallet
-12. Ledger record creation/update
+11. Debit customer wallet
+12. Ledger update
 13. Audit-log write
-14. Commit on success or rollback on failure
+14. Commit or rollback
 15. Response generation
-
-### Important Difference
-
-Unlike CASH_IN, CASH_OUT reduces the customer's wallet balance.
-Therefore sufficient-balance validation is required before successful
-completion.
-
----
 
 ## DEBIT
 
-Purpose:
-Move money from the customer's mobile-money balance toward a bank or
-external debit destination represented in the reference pipeline.
-
-### Processing Stages
+Purpose: move money from the customer's mobile-money balance toward an external debit destination represented by the reference pipeline.
 
 1. Schema validation
-2. Transaction-ID / idempotency / duplicate check
-3. Customer account lookup
-4. Basic transaction validation
-5. Destination bank / external account lookup
-6. Customer balance / fund-availability validation
-7. Transaction-limit and policy validation
-8. Risk screening — optional extension (disabled in baseline v0.1) by policy
-9. Additional verification if required
+2. Controlled authentication/authorization/security validation
+3. Transaction-ID / idempotency / duplicate check
+4. Customer account lookup
+5. Basic transaction validation
+6. Destination lookup
+7. Customer balance/fund-availability validation
+8. Transaction-limit and policy validation
+9. Additional verification if required by the locked policy
 10. Begin database transaction
-11. Debit the customer wallet and record the destination-side operation
-12. Ledger record creation/update
+11. Debit customer wallet and record destination-side operation
+12. Ledger update
 13. Audit-log write
-14. Commit on success or rollback on failure
+14. Commit or rollback
 15. Response generation
-
----
 
 ## PAYMENT
 
-Purpose:
-Pay a merchant for goods or services using the customer's mobile-money
-balance.
-
-### Processing Stages
+Purpose: pay a merchant using the customer's mobile-money balance.
 
 1. Schema validation
-2. Transaction-ID / idempotency / duplicate check
-3. Customer account lookup
-4. Basic transaction validation
-5. Merchant lookup and merchant-status validation
-6. Customer balance / fund-availability validation
-7. Transaction-limit and policy validation
-8. Risk screening — optional extension (disabled in baseline v0.1) by policy
-9. Additional verification if required
+2. Controlled authentication/authorization/security validation
+3. Transaction-ID / idempotency / duplicate check
+4. Customer account lookup
+5. Basic transaction validation
+6. Merchant lookup/status validation
+7. Customer balance/fund-availability validation
+8. Transaction-limit and policy validation
+9. Additional verification if required by the locked policy
 10. Begin database transaction
-11. Debit the customer wallet
-12. Credit or record the merchant-side payment
-13. Ledger record creation/update
+11. Debit customer wallet
+12. Credit/record merchant-side payment
+13. Ledger update
 14. Audit-log write
-15. Commit on success or rollback on failure
+15. Commit or rollback
 16. Response generation
-
----
 
 ## TRANSFER
 
-Purpose:
-Transfer money from one mobile-money customer account to another
-customer account.
-
-### Processing Stages
+Purpose: transfer money from one mobile-money customer account to another.
 
 1. Schema validation
-2. Transaction-ID / idempotency / duplicate check
-3. Source customer account lookup
-4. Basic transaction validation
-5. Destination customer account lookup
-6. Source and destination account validation
-7. Source balance / fund-availability validation
-8. Transaction-limit and policy validation
-9. Risk screening — optional extension (disabled in baseline v0.1) by policy
-10. Additional verification if required
+2. Controlled authentication/authorization/security validation
+3. Transaction-ID / idempotency / duplicate check
+4. Source customer lookup
+5. Basic transaction validation
+6. Destination customer lookup
+7. Source/destination account validation
+8. Source balance/fund-availability validation
+9. Transaction-limit and policy validation
+10. Additional verification if required by the locked policy
 11. Begin database transaction
-12. Debit the source customer wallet
-13. Credit the destination customer wallet
-14. Ledger record creation/update
+12. Debit source wallet
+13. Credit destination wallet
+14. Ledger update
 15. Audit-log write
-16. Commit on success or rollback on failure
+16. Commit or rollback
 17. Response generation
 
-## Risk Screening
+## Baseline Risk-Screening Decision
 
-Risk-model inference is not part of the baseline FinCluster Reference
-Pipeline v0.1.
+Risk-model inference is disabled in the baseline v0.1 research timing pipeline.
 
-It is reserved as an optional extension for a later experiment.
-This avoids introducing a second machine-learning problem before
-the latency-prediction and routing methodology is validated.
-
-The reference pipeline may later incorporate risk-based screening,
-where higher-risk transactions trigger additional verification.
+A later version may explicitly add pre-routing risk indicators or risk screening, but that change must create a new pipeline version and be evaluated separately.

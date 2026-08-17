@@ -1,132 +1,149 @@
-# Latency Target and Measurement Definition - Version 0.2
+# Latency Target and Measurement Definition - Version 0.2 (Updated Notes)
 
 ## 1. Primary Machine-Learning Task
 
 The primary task is **node-aware service-time regression**.
 
-The model will estimate how long a transaction is expected to require on a known controlled node profile.
-
 ```text
-Transaction features
-+ Node-profile features
-+ Controlled runtime-condition features
+Pre-routing transaction features
++ controlled node-profile features
 -> Predicted service_time_ms
 ```
 
-## 2. Primary Target
+Dynamic runtime-condition features may be added later only if they are measured before routing and deliberately included in the experimental design.
 
-The proposed primary target is:
+## 2. Primary Target
 
 ```text
 service_time_ms
 ```
 
-`service_time_ms` means the time spent executing the FinCluster reference processing pipeline after the transaction begins processing and before the response is produced.
+`service_time_ms` is the measured server-side time required to execute the documented FinCluster reference processing pipeline for one transaction on one controlled node profile.
 
-It should not include unrelated client-network delay.
+It is the dependent variable/target `y`. It must not be included in model input `X`.
 
-## 3. Difference Between Service Time and End-to-End Latency
+## 3. Measurement Boundary
 
-### Service Time
-
-Used as the ML target:
+Recommended baseline boundary:
 
 ```text
-Processing start -> Processing completion
+Timer starts immediately before the reference processing pipeline begins.
+Timer stops after the pipeline reaches its final processing state and response-generation work included by the locked protocol is complete.
 ```
 
-### End-to-End Latency
+The exact timer location must remain identical for all node profiles and all measurements in a dataset version.
 
-Used as a system-level evaluation metric:
+Unrelated client/network delay is excluded from the regression target.
+
+## 4. Service Time vs End-to-End Latency
+
+### Service Time - ML Target
 
 ```text
-Transaction arrival
+processing start -> processing completion
+```
+
+### End-to-End Latency - System Metric
+
+```text
+transaction arrival
 + queue waiting
 + routing decision
 + model inference
-+ node processing
++ selected-node processing
 + response completion
 ```
 
-Queue waiting time is not the transaction's intrinsic workload label. It depends on traffic and scheduler behaviour.
+Queue waiting is not included in the primary service-time label because it depends on traffic and scheduler state.
 
-## 4. Input Features
+## 5. Input Features
 
-### Transaction Features
+### Current PaySim Candidates
 
-Only attributes available before routing should be considered, for example:
+- `type`
+- `amount`
+- `oldbalanceOrg`
+- `oldbalanceDest`
+- `step` (candidate; evaluate usefulness)
 
-- transaction type
-- amount
-- pre-transaction source balance
-- pre-transaction destination balance, when available
-- step or time-window feature
-- derived balance-consistency indicators that do not use future information
-- pre-routing risk or verification indicators, when legitimately available
+### Current PaySim Exclusions
+
+- `nameOrig`
+- `nameDest`
+- `newbalanceOrig`
+- `newbalanceDest`
+- `isFraud`
+- `isFlaggedFraud`
+
+VPN is not present in the verified current PaySim schema and is not part of the baseline feature set.
 
 ### Node Features
 
-The feature columns stay the same for all rows; only the values change between node profiles.
+- `node_profile`
+- `cpu_limit`
+- `memory_limit`
+- optional `concurrency_limit` after pilot approval
 
-Examples:
+Potential later dynamic features, if recorded before routing:
 
-- CPU quota or allocated CPU count
-- memory limit
-- node profile identifier
-- concurrency level
-- current queue length, when measured at routing time
-- current CPU-load band, when controlled and recorded
+- current queue length;
+- current CPU load;
+- current memory load;
+- node health state.
 
-### Columns Requiring Leakage Review
+## 6. Unique Transaction Identity and Grouping
 
-- `isFraud`
-- `isFlaggedFraud`
-- post-transaction balance columns
-- raw account identifiers
-- measurements generated after execution
+Every selected transaction receives a stable unique `transaction_id`.
 
-## 5. Reference Processing Pipeline
+The ID is used for grouping, traceability, idempotency, and later safe-reroute logic, but is not an ML predictor.
 
-The pipeline is a **FinCluster reference implementation**, not a claim that all banks or MFS providers use the exact same internal sequence.
+All observations derived from the same transaction must remain in one train/validation/test split group.
 
-The provisional common stages are:
+## 7. Reference Processing Pipeline
 
-1. common request/schema validation;
-2. transaction-ID and idempotency lookup;
-3. required account and entity lookup;
-4. balance, limit, and transaction-rule checks;
-5. optional risk-model inference or enhanced verification;
-6. database transaction and ledger update;
-7. audit-log write;
-8. response generation.
+The pipeline is a **FinCluster reference implementation**, not a claim that every bank or MFS provider uses the same internal sequence.
 
-Transaction-type-specific validation and processing branches may add or skip stages. The exact policy must be documented and mentor-reviewed before data collection.
+Baseline categories include:
 
-## 6. Why Schema Validation Can Differ
+1. schema/request validation;
+2. security/authentication/authorization control as defined by the baseline;
+3. transaction-ID/idempotency/duplicate check;
+4. account/entity lookup and transaction-type validation;
+5. balance/fund and transaction-limit/policy checks when applicable;
+6. optional conditional verification defined by policy;
+7. begin database transaction;
+8. required debit/credit/state changes;
+9. ledger update;
+10. audit-log write;
+11. commit or rollback;
+12. response/final processing completion.
 
-Every transaction uses common validation, but type-specific fields differ.
+All compared node profiles must run the same locked security and integrity logic. Performance gains must not be created by disabling security/ACID steps on one profile.
 
-Examples:
+## 8. ACID and Integrity
 
-- a balance inquiry may require one account identifier;
-- a payment may require a merchant identifier;
-- a cash-out may require an agent identifier;
-- a transfer may require valid source and destination accounts.
+The processing design preserves:
 
-This variation does not create a model-training problem. It creates measurable variation that the model can learn, provided the relevant pre-routing transaction features are included.
+- **Atomicity:** related state updates either commit together or roll back.
+- **Consistency:** defined account/ledger invariants remain valid.
+- **Isolation:** concurrent transaction execution must not corrupt shared financial state.
+- **Durability:** committed experiment state should persist according to the selected test database design.
 
-## 7. Measurement Procedure
+Idempotency/exactly-once concerns are related but separate from ACID. A stable transaction ID and idempotency check are required for duplicate protection.
 
-For every selected transaction and node profile:
+## 9. Repeated Measurement Procedure
 
-1. run warm-up executions;
+For every selected transaction and every node profile:
+
+1. perform warm-up executions;
 2. execute the same processing path multiple measured times;
-3. randomise the order of node-profile runs;
-4. record every raw run;
-5. use the median measured service time as the stable target;
-6. record the exact pipeline version, software environment, and node profile.
+3. record every raw run separately;
+4. randomize/interleave node-profile run order where feasible to reduce time-order bias;
+5. calculate a robust aggregate for that transaction-node pair;
+6. store the aggregate as the ground-truth `service_time_ms` for model training;
+7. retain raw runs for variance and reproducibility analysis.
 
-Proposed initial protocol:
+### Provisional Pilot Protocol
 
 ```text
 Warm-up runs: 2
@@ -134,87 +151,131 @@ Measured repetitions: 5
 Primary aggregate: median service_time_ms
 ```
 
-This protocol is provisional and may be revised after a pilot benchmark.
+The final repetition count must be decided after pilot variance analysis.
 
-## 8. Supporting Measurements
+## 10. Important Correction: KNN/K-Means Do Not Create the Ground-Truth Time
 
-These measurements support analysis but are not automatically model inputs:
+Incorrect flow:
 
-- CPU time
-- peak memory
-- database time
-- model-inference time inside the pipeline
-- count of executed validation or verification stages
-- query count
-- rollback/commit status
+```text
+Repeated runs -> KNN/K-Means -> final service_time_ms
+```
 
-Stage-level execution times are mainly explanatory columns because they are not known before the transaction executes.
+Correct flow:
 
-## 9. Controlled Node Profiles
+```text
+Repeated runs -> median -> measured ground-truth service_time_ms
+```
 
-Docker resource limits can create reproducible node profiles on the same host, such as low-, medium-, and high-capacity profiles.
+Then:
 
-The exact profiles have not yet been approved. They must be selected through a pilot experiment and documented precisely.
+```text
+Transaction + node features -> regression models -> predicted service_time_ms
+```
 
-Results measured on one host are valid for that documented System Under Test. A company using different servers would need to:
+Separately, optional:
 
-- run a local calibration benchmark;
-- collect local processing measurements; and
-- recalibrate or retrain the latency model.
+```text
+Measured/reference service-time distribution -> K-Means -> workload bands
+```
 
-The first paper should not claim universal accuracy on unseen hardware.
+## 11. Supporting Measurements
 
-## 10. Bias and Data-Splitting Controls
+Useful analysis columns that are not automatically online model inputs:
 
-To avoid confounding node capability with transaction type:
+- CPU time;
+- peak memory;
+- database time;
+- stage-level timing;
+- query count;
+- count of executed verification stages;
+- commit/rollback state;
+- experiment host/process information.
 
-- each sampled transaction should be executed on every selected node profile;
-- node-profile sample counts should be balanced;
-- run order should be randomised;
-- the same transaction ID must not appear in both training and test sets;
-- all repetitions of one transaction should remain in the same split group;
-- models must use the same train/validation/test partitions.
+## 12. Controlled Node Profiles
 
-## 11. Candidate Regression Models
+Low-, Medium-, and High-capacity profiles will be created using controlled resource settings, likely Docker resource limits on the same host.
+
+Exact CPU/memory/concurrency values remain provisional until the host machine is inspected and a pilot is run.
+
+The same transaction must be executed on every selected node profile to avoid transaction-distribution bias.
+
+## 13. Candidate Regression Models
+
+### Core benchmark
 
 - Linear Regression
+- Ridge Regression
+- KNN Regressor
 - Decision Tree Regressor
 - Random Forest Regressor
 - Extra Trees Regressor
+- Gradient Boosting Regressor
 - HistGradientBoosting Regressor
 - XGBoost Regressor
 - CatBoost Regressor
 
-Optional later models may be added only if they provide a justified baseline or research value.
+### Additional justified candidates
 
-## 12. Model-Level Metrics
+- LightGBM Regressor
+- Support Vector Regression (SVR)
+- MLP Regressor
 
-- MAE - primary prediction-error metric
-- RMSE - gives higher penalty to large errors
-- R-squared - explains variance captured by the model
-- model inference latency
+More models should only be retained if the comparison remains fair and computationally feasible.
+
+## 14. Model-Level Metrics
+
+### Prediction quality
+
+- MAE - primary interpretable error metric
+- RMSE - penalizes large errors
+- R-squared
+- Median Absolute Error
+- P95 absolute prediction error
+
+### Efficiency
+
+- training time
+- mean inference latency
+- P95 inference latency
 - model size
+- peak memory where feasible
 
-## 13. Derived Routing Category
+All models must use the same grouped splits, preprocessing policy, seeds, and comparable tuning budget.
 
-Heavy/Light is no longer the primary training label.
+## 15. Secondary Workload Band
 
-A compatibility label may be derived later from predicted latency and an agreed SLA or node threshold:
+Light / Moderate / Heavy is not the primary target.
+
+An optional secondary layer may use measured/reference service-time distributions to derive interpretable workload bands. K-Means is one candidate clustering method.
+
+If clustering is used, evaluate separation/stability and do not force a three-cluster result without evidence.
+
+Desired dashboard-style output may contain both:
 
 ```text
-Predicted latency on a low-capacity node <= SLA
--> low-capacity compatible
-
-Predicted latency on a low-capacity node > SLA
--> higher-capacity candidate
+Predicted Service Time: 37.386 ms
+Workload Band: Moderate
 ```
 
-The SLA or threshold must be defined before final evaluation and must not be tuned on the test set.
+## 16. System-Level Experiment Comes Later
 
-## 14. Current Limitations
+After the prediction benchmark is complete, selected model(s) will be integrated into routing and compared with multiple baselines using:
 
-- The reference pipeline is not yet implemented or mentor-validated.
-- The exact Docker profiles are not final.
-- No measured latency dataset has been collected yet.
-- The design will initially model known controlled profiles rather than unseen company hardware.
-- PaySim provides transaction attributes, not processing-time ground truth.
+- average/p50/p95/p99 end-to-end latency;
+- throughput;
+- queue wait;
+- SLA-violation rate;
+- simulated cost;
+- node utilization;
+- optional failure/recovery metrics.
+
+## 17. Current Limitations
+
+- Exact PaySim provenance/license still requires documentation.
+- Full programmatic PaySim inspection is not yet recorded.
+- Reference pipeline is specified but not yet implemented as the research measurement harness.
+- Exact node-profile limits are not final.
+- No measured service-time dataset has been collected yet.
+- No regression model result exists yet.
+- Any workload clusters remain proposed until enough measured data exist.

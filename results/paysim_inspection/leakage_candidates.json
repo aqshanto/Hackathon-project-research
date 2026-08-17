@@ -1,0 +1,8 @@
+[
+  "isFraud",
+  "isFlaggedFraud",
+  "newbalanceOrig",
+  "newbalanceDest",
+  "nameOrig",
+  "nameDest"
+]

@@ -1,0 +1,3 @@
+column,scope,sample_rows,unique_values,unique_percent
+nameOrig,bounded_exploratory_sample,100000,100000,100.0
+nameDest,bounded_exploratory_sample,100000,51551,51.551

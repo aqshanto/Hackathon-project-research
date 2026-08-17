@@ -1,0 +1,45 @@
+{
+  "created_at_utc": "2026-08-16T13:04:37.812896+00:00",
+  "purpose": "FinCluster service-time pilot; not a final research result",
+  "node_profile": {
+    "name": "Low",
+    "cpu_limit_metadata": 0.25,
+    "memory_mb_metadata": 1024,
+    "external_limits_required": true
+  },
+  "measurement_protocol": {
+    "warmups_per_transaction_node_pair": 2,
+    "measured_runs_per_transaction_node_pair": 5,
+    "ground_truth_aggregation": "median",
+    "processor_state_reset_before_every_execution": true
+  },
+  "pilot_selection": {
+    "transactions": 10,
+    "rows_per_type": 2,
+    "transaction_types": [
+      "CASH_IN",
+      "CASH_OUT",
+      "DEBIT",
+      "PAYMENT",
+      "TRANSFER"
+    ],
+    "selection_file": "Research/data/raw/pilot_v03_selected_transactions.csv"
+  },
+  "outputs": {
+    "raw_output": "Research/data/raw/pilot_v03_service_time_runs.csv",
+    "processed_output": "Research/data/processed/pilot_v03_transaction_node_dataset.csv"
+  },
+  "environment": {
+    "python": "3.11.16 (main, Aug 13 2026, 19:40:50) [GCC 14.2.0]",
+    "platform": "Linux-6.6.114.1-microsoft-standard-WSL2-x86_64-with-glibc2.41",
+    "processor": "",
+    "hostname": "23fdcfb9173f",
+    "pid": 1
+  },
+  "current_run": {
+    "measured_rows_written": 50,
+    "successful_rows": 50,
+    "failed_rows": 0
+  },
+  "warning": "cpu_limit and memory_mb are metadata only in Python. The actual process/container must be externally constrained to match."
+}
