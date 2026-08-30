@@ -1,0 +1,30 @@
+FinCluster FINAL_TRAINING_DATA_v1 FREEZE REPORT
+============================================================
+Created UTC: 2026-08-29T18:44:57.985155+00:00
+Approval: APPROVED_WITH_DOCUMENTED_RESIDUAL_VARIABILITY
+
+DATASET
+Raw measured rows: 15000
+Processed transaction-node rows: 3000
+Unique transactions: 1000
+Target column: service_time_ms
+
+SPLIT
+Train: 700 transactions / 2100 TX-node rows / 140 transactions per type
+Validation: 150 transactions / 450 TX-node rows / 30 transactions per type
+Test: 150 transactions / 450 TX-node rows / 30 transactions per type
+Transaction leakage across splits: 0
+
+KNOWN / DOCUMENTED QUALITY FINDINGS
+Node ordering Low > Medium > High: 1000/1000 transactions
+Median within-pair CV (%): High 1.477, Low 6.266, Medium 6.254
+Pairs CV >10%: High 10, Low 130, Medium 144
+Max absolute normalized block/node median deviation: 7.576%
+Robust-outlier flagged processed rows (|z|>3.5): 48 / 3000
+No rows removed because of these diagnostics.
+
+MODEL-LEAKAGE RULES
+- transaction_id is grouping/audit metadata, NOT a predictor.
+- newbalance* post-transaction fields are not default predictors.
+- target/stage timings are not predictor features.
+- final held-out test set must remain untouched during tuning.

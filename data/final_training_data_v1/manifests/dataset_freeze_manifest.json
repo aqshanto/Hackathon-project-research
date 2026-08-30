@@ -1,0 +1,180 @@
+{
+  "dataset_name": "FINAL_TRAINING_DATA_v1",
+  "created_utc": "2026-08-29T18:44:57.985155+00:00",
+  "approval": "APPROVED_WITH_DOCUMENTED_RESIDUAL_VARIABILITY",
+  "primary_target": "service_time_ms (median repeated service time for transaction-node pair)",
+  "sampling": {
+    "source": "PaySim synthetic transaction dataset",
+    "sampling_seed": 20260829,
+    "balanced_transactions_total": 1000,
+    "per_type": 200,
+    "types": [
+      "CASH_IN",
+      "CASH_OUT",
+      "DEBIT",
+      "PAYMENT",
+      "TRANSFER"
+    ],
+    "note": "Balanced benchmark sampling is intentional and is not an estimate of PaySim/production transaction-type prevalence."
+  },
+  "measurement_protocol": {
+    "reference_processor": "v0.3 Rebalanced (must match captured script hash)",
+    "node_profiles": {
+      "Low": {
+        "cpu_quota": 0.6,
+        "cpu_period_us": 10000,
+        "memory_mb": 1024
+      },
+      "Medium": {
+        "cpu_quota": 0.75,
+        "cpu_period_us": 10000,
+        "memory_mb": 2048
+      },
+      "High": {
+        "cpu_quota": 1.0,
+        "cpu_period_us": 10000,
+        "memory_mb": 4096
+      }
+    },
+    "cpu_pin": "logical CPU 0",
+    "thread_limits": {
+      "OMP_NUM_THREADS": 1,
+      "OPENBLAS_NUM_THREADS": 1,
+      "MKL_NUM_THREADS": 1,
+      "NUMEXPR_NUM_THREADS": 1
+    },
+    "warmups_per_tx_node": 2,
+    "measured_runs_per_tx_node": 5,
+    "aggregation_target": "median successful service_time_ms per transaction-node pair",
+    "host_collection_note": "Block 01 was collected in session S1; the host was restarted after Block 01. Blocks 02-10 were collected in session S2. Deep audit found only small session-level normalized median shifts and no evidence requiring recollection."
+  },
+  "candidate_validation": {
+    "checks": {
+      "raw_row_count": true,
+      "processed_row_count": true,
+      "selection_row_count": true,
+      "selection_unique_transactions": true,
+      "raw_unique_transactions": true,
+      "processed_unique_transactions": true,
+      "balanced_selection_by_type": true,
+      "processed_node_counts": true,
+      "processed_unique_tx_node_pairs": true,
+      "each_transaction_has_three_nodes": true,
+      "raw_five_measured_rows_per_tx_node": true,
+      "transaction_id_sets_match": true,
+      "processed_type_consistent_within_tx": true,
+      "selection_processed_type_match": true,
+      "processed_target_numeric_finite": true,
+      "node_ordering_low_gt_medium_gt_high": true
+    },
+    "recomputed_cv_summary": {
+      "Low": {
+        "median_cv_pct": 6.266406683240822,
+        "mean_cv_pct": 6.519900162602151,
+        "max_cv_pct": 16.977127725695556,
+        "pairs_cv_gt_10": 130
+      },
+      "Medium": {
+        "median_cv_pct": 6.25359468167537,
+        "mean_cv_pct": 6.738522117114601,
+        "max_cv_pct": 21.612729958583632,
+        "pairs_cv_gt_10": 144
+      },
+      "High": {
+        "median_cv_pct": 1.4769378566718188,
+        "mean_cv_pct": 1.9347086677042322,
+        "max_cv_pct": 16.3394399792283,
+        "pairs_cv_gt_10": 10
+      }
+    },
+    "reviewed_deep_audit": {
+      "decision": "APPROVED_WITH_DOCUMENTED_RESIDUAL_VARIABILITY",
+      "structural_audit": "PASS",
+      "ordering_low_gt_medium_gt_high": "1000/1000 transactions",
+      "median_within_pair_cv_pct": {
+        "High": 1.477,
+        "Low": 6.266,
+        "Medium": 6.254
+      },
+      "pairs_cv_gt_10": {
+        "High": 10,
+        "Low": 130,
+        "Medium": 144
+      },
+      "max_abs_block_node_median_deviation_pct": 7.576,
+      "robust_outlier_processed_rows_abs_z_gt_3_5": 48,
+      "node_separation_median_pct": {
+        "Low_vs_Medium": 25.718,
+        "Medium_vs_High": 29.4
+      },
+      "review_note": "Residual variability is documented and retained; flagged rows are not deleted. Primary modeling should use the full frozen dataset. Sensitivity analyses may be run later."
+    }
+  },
+  "split_policy": {
+    "method": "transaction-grouped + exact type-stratified deterministic SHA-256 ranking",
+    "split_seed": 20260830,
+    "ratios": {
+      "train": 0.7,
+      "validation": 0.15,
+      "test": 0.15
+    },
+    "transaction_counts": {
+      "train": 700,
+      "validation": 150,
+      "test": 150
+    },
+    "processed_row_counts": {
+      "train": 2100,
+      "validation": 450,
+      "test": 450
+    },
+    "per_type_transaction_counts": {
+      "train": {
+        "CASH_IN": 140,
+        "CASH_OUT": 140,
+        "DEBIT": 140,
+        "PAYMENT": 140,
+        "TRANSFER": 140
+      },
+      "validation": {
+        "CASH_IN": 30,
+        "CASH_OUT": 30,
+        "DEBIT": 30,
+        "PAYMENT": 30,
+        "TRANSFER": 30
+      },
+      "test": {
+        "CASH_IN": 30,
+        "CASH_OUT": 30,
+        "DEBIT": 30,
+        "PAYMENT": 30,
+        "TRANSFER": 30
+      }
+    },
+    "leakage_check": "PASS - zero transaction IDs shared across splits",
+    "important": "transaction_id remains grouping/audit metadata and must NOT be used as an ML predictor."
+  },
+  "source_candidate_hashes": {
+    "candidate_raw_sha256": "91e923ae9463db4975deda2de48adcbb4febb9e7b4283f091b79ac3c871cb095",
+    "candidate_processed_sha256": "84c6b988140f34fb253e20420a0ec0c8fab29b692bf3c739ff400f0a79e5a3f2",
+    "candidate_selection_sha256": "41b7930fea27d46798f92607de041ec60322a4544dbf6839f3a85d8ddce93748"
+  },
+  "columns_detected": {
+    "raw_transaction_id": "transaction_id",
+    "raw_node": "node_profile",
+    "raw_service_time": "service_time_ms",
+    "processed_transaction_id": "transaction_id",
+    "processed_type": "type",
+    "processed_node": "node_profile",
+    "processed_target": "service_time_ms",
+    "selection_transaction_id": "transaction_id",
+    "selection_type": "type"
+  },
+  "methodological_notes": [
+    "No candidate raw measurements were deleted because of CV or robust-outlier flags.",
+    "The full frozen dataset is the primary modeling dataset.",
+    "Any later outlier-excluded analysis must be labeled sensitivity analysis, not replacement ground truth.",
+    "Do not refit preprocessing on validation/test data; fit preprocessing on training data only.",
+    "Do not change the held-out test set after model comparison begins."
+  ]
+}

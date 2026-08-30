@@ -1,0 +1,2 @@
+profile,median_abs_A_B_diff_pct,mean_abs_A_B_diff_pct,max_abs_A_B_diff_pct,pairs_abs_diff_gt_10,median_signed_A_to_B_diff_pct,working_gate_median_le_5,working_gate_pairs_gt10_le_2,working_gate_PASS
+low60,2.0758359415293315,2.392695868618522,5.666404614294842,0,-0.7172174931154951,True,True,True

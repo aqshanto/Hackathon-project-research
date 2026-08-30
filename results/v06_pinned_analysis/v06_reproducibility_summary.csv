@@ -1,0 +1,4 @@
+node,median_abs_A_B_diff_pct,mean_abs_A_B_diff_pct,max_abs_A_B_diff_pct,pairs_abs_diff_gt_10,median_signed_A_to_B_diff_pct,working_gate_median_le_5,working_gate_pairs_gt10_le_2,working_gate_PASS
+low,6.182153977670481,5.368980031764372,11.263406617328172,2,-0.33425038776814103,False,True,False
+medium,1.9763502430786568,3.364039378773717,8.929073567338348,0,-1.538339555418069,True,True,True
+high,1.5212562263886462,1.4573275901458582,3.3707083859341873,0,0.7505690230243606,True,True,True

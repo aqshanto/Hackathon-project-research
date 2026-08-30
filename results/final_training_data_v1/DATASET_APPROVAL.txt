@@ -1,0 +1,5 @@
+FINAL_TRAINING_DATA_v1
+STATUS = APPROVED_WITH_DOCUMENTED_RESIDUAL_VARIABILITY
+Created UTC = 2026-08-29T18:44:57.985155+00:00
+Primary modeling dataset = data/final_training_data_v1/processed/final_training_data_v1_transaction_node_dataset.csv
+Grouped split assignments = data/final_training_data_v1/splits/transaction_split_assignments.csv

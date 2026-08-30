@@ -1,0 +1,3 @@
+profile,batch,median_within_batch_cv_pct,mean_within_batch_cv_pct,max_within_batch_cv_pct,pairs_cv_gt_10
+low60,A,4.622890637985423,6.281250428817729,11.024437445166647,3
+low60,B,5.485179117132319,5.621468558658739,7.7008482732214665,0

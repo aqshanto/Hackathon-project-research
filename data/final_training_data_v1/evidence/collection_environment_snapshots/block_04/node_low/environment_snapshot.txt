@@ -1,0 +1,48 @@
+=== FINAL-CANDIDATE ENVIRONMENT SNAPSHOT: BEFORE ===
+utc_time = 2026-08-29T17:23:03.069949+00:00
+block = 04
+node = low
+os.cpu_count() = 8
+sched affinity = [0]
+OMP_NUM_THREADS = 1
+OPENBLAS_NUM_THREADS = 1
+MKL_NUM_THREADS = 1
+NUMEXPR_NUM_THREADS = 1
+docker_image_id = sha256:6bb0044933eebf13b3479715ee2b242e7b5f995bdf9633b50560be673a7e6c90
+cpu.max = 6000 10000
+cpuset.cpus.effective = 0
+memory.max = 1073741824
+cpu.stat:
+usage_usec 640938
+user_usec 508866
+system_usec 132072
+nr_periods 129
+nr_throttled 40
+throttled_usec 100032
+nr_bursts 0
+burst_usec 0
+
+=== FINAL-CANDIDATE ENVIRONMENT SNAPSHOT: AFTER ===
+utc_time = 2026-08-29T17:23:37.094760+00:00
+block = 04
+node = low
+os.cpu_count() = 8
+sched affinity = [0]
+OMP_NUM_THREADS = 1
+OPENBLAS_NUM_THREADS = 1
+MKL_NUM_THREADS = 1
+NUMEXPR_NUM_THREADS = 1
+docker_image_id = sha256:6bb0044933eebf13b3479715ee2b242e7b5f995bdf9633b50560be673a7e6c90
+cpu.max = 6000 10000
+cpuset.cpus.effective = 0
+memory.max = 1073741824
+cpu.stat:
+usage_usec 21036825
+user_usec 20854950
+system_usec 181874
+nr_periods 3531
+nr_throttled 3414
+throttled_usec 13493326
+nr_bursts 0
+burst_usec 0
+runner_exit_code = 0

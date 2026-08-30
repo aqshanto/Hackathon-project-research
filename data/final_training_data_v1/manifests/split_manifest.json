@@ -1,0 +1,22 @@
+{
+  "created_utc": "2026-08-29T18:44:57.993327+00:00",
+  "seed": 20260830,
+  "method": "SHA256(seed:transaction_id) deterministic ranking within each transaction type",
+  "train": {
+    "transactions": 700,
+    "rows": 2100,
+    "per_type_transactions": 140
+  },
+  "validation": {
+    "transactions": 150,
+    "rows": 450,
+    "per_type_transactions": 30
+  },
+  "test": {
+    "transactions": 150,
+    "rows": 450,
+    "per_type_transactions": 30
+  },
+  "grouping_key": "transaction_id",
+  "leakage_check": "PASS"
+}

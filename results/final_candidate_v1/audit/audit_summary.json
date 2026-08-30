@@ -1,0 +1,20 @@
+{
+  "created_at_utc": "2026-08-29T18:17:27.112549+00:00",
+  "status": "FINAL_COLLECTION_CANDIDATE_AUDIT",
+  "structural": {
+    "expected_raw_rows": 15000,
+    "raw_rows": 15000,
+    "successful_raw_rows": 15000,
+    "failed_raw_rows": 0,
+    "expected_processed_rows": 3000,
+    "processed_rows": 3000,
+    "selection_transactions": 1000,
+    "raw_transactions": 1000,
+    "processed_transactions": 1000
+  },
+  "structural_pass": true,
+  "expected_node_order_transactions": 1000,
+  "total_transactions": 1000,
+  "expected_node_order_fraction": 1.0,
+  "note": "This audit does not automatically promote the dataset to FINAL TRAINING DATA. CV, block effects, outliers, feature distributions, provenance, and methodology must be reviewed before approval."
+}

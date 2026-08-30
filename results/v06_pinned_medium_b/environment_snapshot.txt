@@ -1,0 +1,42 @@
+=== V0.6 ENVIRONMENT SNAPSHOT: BEFORE ===
+utc_time = 2026-08-29T13:57:43.471305+00:00
+os.cpu_count() = 8
+sched affinity = [0]
+OMP_NUM_THREADS = 1
+OPENBLAS_NUM_THREADS = 1
+MKL_NUM_THREADS = 1
+NUMEXPR_NUM_THREADS = 1
+cpu.max = 7500 10000
+cpuset.cpus.effective = 0
+memory.max = 2147483648
+cpu.stat:
+usage_usec 521725
+user_usec 437328
+system_usec 84396
+nr_periods 73
+nr_throttled 41
+throttled_usec 53514
+nr_bursts 0
+burst_usec 0
+
+=== V0.6 ENVIRONMENT SNAPSHOT: AFTER ===
+utc_time = 2026-08-29T13:57:46.826652+00:00
+os.cpu_count() = 8
+sched affinity = [0]
+OMP_NUM_THREADS = 1
+OPENBLAS_NUM_THREADS = 1
+MKL_NUM_THREADS = 1
+NUMEXPR_NUM_THREADS = 1
+cpu.max = 7500 10000
+cpuset.cpus.effective = 0
+memory.max = 2147483648
+cpu.stat:
+usage_usec 3021663
+user_usec 2876595
+system_usec 145068
+nr_periods 409
+nr_throttled 344
+throttled_usec 770176
+nr_bursts 0
+burst_usec 0
+runner_exit_code = 0

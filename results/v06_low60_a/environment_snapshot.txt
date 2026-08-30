@@ -1,0 +1,42 @@
+=== LOW60 ENVIRONMENT SNAPSHOT: BEFORE ===
+utc_time = 2026-08-29T14:30:07.622640+00:00
+os.cpu_count() = 8
+sched affinity = [0]
+OMP_NUM_THREADS = 1
+OPENBLAS_NUM_THREADS = 1
+MKL_NUM_THREADS = 1
+NUMEXPR_NUM_THREADS = 1
+cpu.max = 6000 10000
+cpuset.cpus.effective = 0
+memory.max = 1073741824
+cpu.stat:
+usage_usec 637540
+user_usec 468021
+system_usec 169519
+nr_periods 132
+nr_throttled 35
+throttled_usec 79855
+nr_bursts 0
+burst_usec 0
+
+=== LOW60 ENVIRONMENT SNAPSHOT: AFTER ===
+utc_time = 2026-08-29T14:30:11.933197+00:00
+os.cpu_count() = 8
+sched affinity = [0]
+OMP_NUM_THREADS = 1
+OPENBLAS_NUM_THREADS = 1
+MKL_NUM_THREADS = 1
+NUMEXPR_NUM_THREADS = 1
+cpu.max = 6000 10000
+cpuset.cpus.effective = 0
+memory.max = 1073741824
+cpu.stat:
+usage_usec 3172644
+user_usec 2948060
+system_usec 224584
+nr_periods 563
+nr_throttled 433
+throttled_usec 1610794
+nr_bursts 0
+burst_usec 0
+runner_exit_code = 0

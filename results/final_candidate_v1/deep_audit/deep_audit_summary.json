@@ -1,0 +1,62 @@
+{
+  "created_at_utc": "2026-08-29T18:33:45.599811+00:00",
+  "status": "DEEP_AUDIT_DESCRIPTIVE_NOT_AN_AUTOMATIC_APPROVAL_GATE",
+  "raw_success_rows": 15000,
+  "processed_rows": 3000,
+  "unique_transactions": 1000,
+  "node_separation": {
+    "ordering_ok": 1000,
+    "transactions": 1000,
+    "low_vs_medium_pct_median": 25.718193605164863,
+    "low_vs_medium_pct_p05": 16.713690597396997,
+    "low_vs_medium_pct_min": 4.518078554116106,
+    "medium_vs_high_pct_median": 29.400184466966625,
+    "medium_vs_high_pct_p05": 19.164195291615737,
+    "medium_vs_high_pct_min": 7.980024741047216
+  },
+  "repeat_stability": {
+    "High": {
+      "count": 1000,
+      "median": 1.4769378566718188,
+      "mean": 1.9347086677042322,
+      "max": 16.3394399792283,
+      "p90": 3.5569897774891257,
+      "p95": 5.229739355614175,
+      "p99": 9.963266996656754,
+      "pairs_cv_gt_10": 10,
+      "pairs_cv_gt_15": 1,
+      "pairs_cv_gt_20": 0
+    },
+    "Low": {
+      "count": 1000,
+      "median": 6.266406683240822,
+      "mean": 6.519900162602151,
+      "max": 16.977127725695556,
+      "p90": 10.570044087877045,
+      "p95": 12.107455699615649,
+      "p99": 14.317799399763471,
+      "pairs_cv_gt_10": 130,
+      "pairs_cv_gt_15": 3,
+      "pairs_cv_gt_20": 0
+    },
+    "Medium": {
+      "count": 1000,
+      "median": 6.25359468167537,
+      "mean": 6.738522117114601,
+      "max": 21.612729958583632,
+      "p90": 10.980923992966657,
+      "p95": 12.310004569782528,
+      "p99": 16.034710882539585,
+      "pairs_cv_gt_10": 144,
+      "pairs_cv_gt_15": 12,
+      "pairs_cv_gt_20": 1
+    }
+  },
+  "block_drift": {
+    "max_abs_block_node_median_normalized_deviation_pct": 7.5761367589662125,
+    "max_abs_block_overall_median_normalized_deviation_pct": 2.2250664454340097
+  },
+  "robust_outliers_abs_z_gt_3_5": 48,
+  "actual_session_note": "S1=block01; S2=blocks02-10, based on the recorded execution history. Descriptive only; session is confounded with block/sample.",
+  "decision_note": "Do not change acceptance criteria post hoc. Review block/session drift, CV localization, outliers, node separation, and provenance before promoting the candidate to FINAL TRAINING DATA."
+}
