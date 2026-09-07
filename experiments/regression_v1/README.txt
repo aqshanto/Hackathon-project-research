@@ -1,46 +1,51 @@
-FinCluster Regression Pipeline v1
-==================================
+FinCluster Regression Pipeline v1 — FIXED
+===========================================
 
-Install to:
+WHY THIS FIX EXISTS
+-------------------
+The original inspect command failed because fincluster-pilot:0.3 does not contain
+scikit-learn. That was an environment dependency issue, not a dataset issue.
+
+This fixed version:
+- lets INSPECT run without importing scikit-learn;
+- uses a dedicated reproducible Docker image for SCREEN;
+- pins scikit-learn==1.5.2.
+
+INSTALL
+-------
+Replace the old files in:
+
 C:\Users\abdul\Desktop\code\Hackathon Project\Research\experiments\regression_v1\
 
-Files:
+with these files:
   regression.ps1
   regression_v1.py
+  Dockerfile.regression
+  build_regression_image.ps1
   README.txt
 
-FIRST COMMAND ONLY:
+FIRST
+-----
+Run INSPECT again:
+
 .\experiments\regression_v1\regression.ps1 inspect
 
-Send the inspect output to ChatGPT before running screen.
+INSPECT does not load the test set and does not train models.
 
-Feature sets:
-  node_only
-  type_node
-  full_no_step
-  full_with_step (if step exists)
+AFTER INSPECT PASSES
+--------------------
+Build the regression image once:
 
-Forbidden default predictors:
-  transaction_id
-  service-time target or target-derived timing fields
-  stage timings
-  newbalanceOrig / newbalanceDest
-  isFraud / isFlaggedFraud
-  nameOrig / nameDest
-  future queue/service information
+.\experiments\regression_v1\build_regression_image.ps1
 
-Screening models:
-  Linear Regression
-  Decision Tree
-  Random Forest
-  Extra Trees
-  HistGradientBoosting
+Expected:
+  REGRESSION_IMAGE_BUILD = PASS
+  Image = fincluster-regression:1.0
 
-Screening metrics:
-  MAE, RMSE, R2, MedianAE, P95AE, MaxAE,
-  training time, validation inference time, serialized model size.
+Then, only after reviewing INSPECT with ChatGPT:
 
-TEST-SET RULE:
-inspect and screen do NOT load test.csv.
-Do not use the test set until screening is reviewed and the tuning/model-selection
-protocol is frozen.
+.\experiments\regression_v1\regression.ps1 screen
+
+TEST-SET RULE
+-------------
+The held-out test set is not loaded by inspect or screen.

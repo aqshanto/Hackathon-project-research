@@ -1,0 +1,57 @@
+{
+  "created_utc": "2026-08-30T05:19:07.585729+00:00",
+  "test_set_loaded": false,
+  "test_set_used_for_selection": false,
+  "group_leakage_check": "PASS",
+  "random_seed": 20260830,
+  "target": "service_time_ms",
+  "models": [
+    "LinearRegression",
+    "DecisionTree",
+    "RandomForest",
+    "ExtraTrees",
+    "HistGradientBoosting"
+  ],
+  "feature_policy": {
+    "type_col": "type",
+    "node_col": "node_profile",
+    "amount_col": "amount",
+    "oldbalanceOrg_col": "oldbalanceOrg",
+    "oldbalanceDest_col": "oldbalanceDest",
+    "step_col": "step",
+    "feature_sets": {
+      "node_only": [
+        "node_profile"
+      ],
+      "type_node": [
+        "type",
+        "node_profile"
+      ],
+      "full_no_step": [
+        "type",
+        "amount",
+        "oldbalanceOrg",
+        "oldbalanceDest",
+        "node_profile"
+      ],
+      "full_with_step": [
+        "type",
+        "amount",
+        "oldbalanceOrg",
+        "oldbalanceDest",
+        "step",
+        "node_profile"
+      ]
+    }
+  },
+  "selection_rule": "Primary validation MAE; RMSE and P95AE secondary. Screening only.",
+  "top_validation_screening_candidate": {
+    "feature_set": "type_node",
+    "model": "RandomForest",
+    "MAE_ms": 0.921989524841412,
+    "RMSE_ms": 1.2458277795953738,
+    "R2": 0.9839209512271737,
+    "MedianAE_ms": 0.745050044958683,
+    "P95_AE_ms": 2.508650673366463
+  }
+}

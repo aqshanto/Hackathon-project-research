@@ -1,0 +1,28 @@
+{
+  "target": "completion_time_ms",
+  "ground_truth_components_not_used_as_features": [
+    "actual_queue_wait_ms",
+    "service_time_ms",
+    "simulator_regime"
+  ],
+  "feature_sets": {
+    "node_only": [
+      "node_profile"
+    ],
+    "type_node": [
+      "type",
+      "node_profile"
+    ],
+    "type_node_queue": [
+      "type",
+      "node_profile",
+      "active_workers",
+      "queue_length"
+    ]
+  },
+  "test_set_loaded": false,
+  "workers_per_node": 10,
+  "state_replicas_per_transaction_node": 3,
+  "seed": 20260830,
+  "note": "Queue waiting time is a generated target component, not an input. The queue-aware model sees only pre-routing observable queue state."
+}

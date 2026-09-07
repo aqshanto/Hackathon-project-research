@@ -5,16 +5,29 @@ from datetime import datetime, timezone
 from pathlib import Path
 import numpy as np
 import pandas as pd
-from sklearn.compose import ColumnTransformer
-from sklearn.ensemble import ExtraTreesRegressor, HistGradientBoostingRegressor, RandomForestRegressor
-from sklearn.impute import SimpleImputer
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_absolute_error, mean_squared_error, median_absolute_error, r2_score
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from sklearn.tree import DecisionTreeRegressor
 
 SEED = 20260830
+
+def import_sklearn():
+    global ColumnTransformer, ExtraTreesRegressor, HistGradientBoostingRegressor
+    global RandomForestRegressor, SimpleImputer, LinearRegression
+    global mean_absolute_error, mean_squared_error, median_absolute_error, r2_score
+    global Pipeline, OneHotEncoder, StandardScaler, DecisionTreeRegressor
+    try:
+        from sklearn.compose import ColumnTransformer
+        from sklearn.ensemble import ExtraTreesRegressor, HistGradientBoostingRegressor, RandomForestRegressor
+        from sklearn.impute import SimpleImputer
+        from sklearn.linear_model import LinearRegression
+        from sklearn.metrics import mean_absolute_error, mean_squared_error, median_absolute_error, r2_score
+        from sklearn.pipeline import Pipeline
+        from sklearn.preprocessing import OneHotEncoder, StandardScaler
+        from sklearn.tree import DecisionTreeRegressor
+    except ModuleNotFoundError as e:
+        raise RuntimeError(
+            "scikit-learn is not installed in the current container. "
+            "Build/use fincluster-regression:1.0 before running screen."
+        ) from e
+
 
 def now_utc():
     return datetime.now(timezone.utc).isoformat()
@@ -205,6 +218,7 @@ def inspect(root, out):
     print("="*72)
 
 def screen(root,out):
+    import_sklearn()
     frozen=root/"data/final_training_data_v1/splits"
     train_path=frozen/"train.csv"; val_path=frozen/"validation.csv"; test_path=frozen/"test.csv"
     if not test_path.exists(): raise FileNotFoundError(test_path)

@@ -1,0 +1,54 @@
+{
+  "test_set_loaded": false,
+  "train_validation_group_leakage": 0,
+  "type_node_cells": 15,
+  "best_existing_node_only": {
+    "model": "RandomForest",
+    "MAE_ms": 5.735036780369955,
+    "R2": 0.5280648488937978
+  },
+  "best_existing_type_node": {
+    "model": "RandomForest",
+    "MAE_ms": 0.921989524841412,
+    "RMSE_ms": 1.2458277795953738,
+    "R2": 0.9839209512271736,
+    "P95_AE_ms": 2.508650673366463
+  },
+  "best_existing_full": {
+    "feature_set": "full_with_step",
+    "model": "HistGradientBoosting",
+    "MAE_ms": 0.9969836056652016,
+    "RMSE_ms": 1.3481901422820632,
+    "R2": 0.9811701601610516,
+    "P95_AE_ms": 2.7183784968207925
+  },
+  "full_minus_type_node_MAE_ms": 0.07499408082378967,
+  "full_minus_type_node_MAE_relative_pct": 8.133940658023107,
+  "simple_baselines": {
+    "TypeNodeMedianLookup": {
+      "MAE_ms": 0.8975769933333335,
+      "RMSE_ms": 1.2619352534319843,
+      "R2": 0.9835024870729365,
+      "MedianAE_ms": 0.6408035000000005,
+      "P95_AE_ms": 2.6593655249999983,
+      "MaxAE_ms": 7.500723499999999
+    },
+    "TypeNodeMeanLookup": {
+      "MAE_ms": 0.9222262756507936,
+      "RMSE_ms": 1.2457654092651096,
+      "R2": 0.9839225611294339,
+      "MedianAE_ms": 0.7448869821428588,
+      "P95_AE_ms": 2.5097033485714224,
+      "MaxAE_ms": 7.356470835714283
+    },
+    "TypeNodeInteractionLinear": {
+      "MAE_ms": 0.9222497627690973,
+      "RMSE_ms": 1.245796408177374,
+      "R2": 0.9839217609959352,
+      "MedianAE_ms": 0.7450286445312511,
+      "P95_AE_ms": 2.509773378417965,
+      "MaxAE_ms": 7.356843912109376
+    }
+  },
+  "interpretation_guardrail": "If the 15-cell lookup baseline matches the best type+node tree model, the predictive task is largely a type-by-node mapping under the current synthetic processor. Do not claim that numeric transaction features add predictive value unless the ablation supports it."
+}

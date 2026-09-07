@@ -1,0 +1,49 @@
+{
+  "created_utc": "2026-08-30T05:13:57.195002+00:00",
+  "test_set_loaded": false,
+  "train_rows": 2100,
+  "validation_rows": 450,
+  "train_transactions": 700,
+  "validation_transactions": 150,
+  "group_leakage": 0,
+  "target": "service_time_ms",
+  "transaction_id": "transaction_id",
+  "feature_policy": {
+    "type_col": "type",
+    "node_col": "node_profile",
+    "amount_col": "amount",
+    "oldbalanceOrg_col": "oldbalanceOrg",
+    "oldbalanceDest_col": "oldbalanceDest",
+    "step_col": "step",
+    "feature_sets": {
+      "node_only": [
+        "node_profile"
+      ],
+      "type_node": [
+        "type",
+        "node_profile"
+      ],
+      "full_no_step": [
+        "type",
+        "amount",
+        "oldbalanceOrg",
+        "oldbalanceDest",
+        "node_profile"
+      ],
+      "full_with_step": [
+        "type",
+        "amount",
+        "oldbalanceOrg",
+        "oldbalanceDest",
+        "step",
+        "node_profile"
+      ]
+    }
+  },
+  "notes": [
+    "transaction_id is grouping metadata only and forbidden as predictor",
+    "newbalance*, fraud labels, names, target-derived timing fields, and future runtime state are excluded",
+    "node_profile is treated as a composite categorical node descriptor",
+    "step is an explicit ablation candidate if present"
+  ]
+}

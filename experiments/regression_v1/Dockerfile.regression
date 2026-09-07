@@ -1,0 +1,6 @@
+FROM fincluster-pilot:0.3
+
+RUN python -m pip install --no-cache-dir \
+    scikit-learn==1.5.2
+
+WORKDIR /app/Research

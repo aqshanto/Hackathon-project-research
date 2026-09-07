@@ -1,0 +1,17 @@
+column,dtype
+transaction_id,object
+source_row_index,int64
+step,int64
+type,object
+amount,float64
+oldbalanceOrg,float64
+oldbalanceDest,float64
+node_profile,object
+cpu_limit,float64
+memory_mb,int64
+service_time_ms,float64
+mean_service_time_ms,float64
+std_service_time_ms,float64
+min_service_time_ms,float64
+max_service_time_ms,float64
+n_successful_runs,int64

@@ -1,0 +1,64 @@
+{
+  "status": "PREPARED",
+  "test_set_loaded": false,
+  "source_test_file_checked_exists_but_not_read": "/app/Research/data/final_training_data_v1/splits/test.csv",
+  "train_validation_group_leakage": 0,
+  "train": {
+    "rows": 6300,
+    "transactions": 700,
+    "queue_wait_positive_pct": 44.93650793650794,
+    "queue_wait_median_ms": 0.0,
+    "queue_wait_p95_ms": 87.80656292303819,
+    "completion_median_ms": 44.68076960497005,
+    "completion_p95_ms": 128.3336743989311
+  },
+  "validation": {
+    "rows": 1350,
+    "transactions": 150,
+    "queue_wait_positive_pct": 45.25925925925926,
+    "queue_wait_median_ms": 0.0,
+    "queue_wait_p95_ms": 88.7811366474197,
+    "completion_median_ms": 45.761055999999996,
+    "completion_p95_ms": 128.41239152346907
+  },
+  "train_best_node_distribution": {
+    "High": 1431,
+    "Medium": 527,
+    "Low": 142
+  },
+  "validation_best_node_distribution": {
+    "High": 307,
+    "Medium": 113,
+    "Low": 30
+  },
+  "train_non_high_best_pct": 31.857142857142858,
+  "validation_non_high_best_pct": 31.77777777777778,
+  "feature_policy": {
+    "target": "completion_time_ms",
+    "ground_truth_components_not_used_as_features": [
+      "actual_queue_wait_ms",
+      "service_time_ms",
+      "simulator_regime"
+    ],
+    "feature_sets": {
+      "node_only": [
+        "node_profile"
+      ],
+      "type_node": [
+        "type",
+        "node_profile"
+      ],
+      "type_node_queue": [
+        "type",
+        "node_profile",
+        "active_workers",
+        "queue_length"
+      ]
+    },
+    "test_set_loaded": false,
+    "workers_per_node": 10,
+    "state_replicas_per_transaction_node": 3,
+    "seed": 20260830,
+    "note": "Queue waiting time is a generated target component, not an input. The queue-aware model sees only pre-routing observable queue state."
+  }
+}
