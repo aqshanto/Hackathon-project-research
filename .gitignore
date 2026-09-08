@@ -1,1 +1,8 @@
 data/source/*.csv
+
+# Serialized model artifacts are regenerable from the frozen dataset + recorded seed.
+# Keeping them out of Git prevents the repository from growing with every screening run.
+# NOTE: the 35 SCREENING_ONLY *.pkl files committed in 1b762b3 remain tracked; this rule
+# only affects newly created artifacts.
+*.pkl
+*.joblib

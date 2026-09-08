@@ -1,0 +1,124 @@
+{
+  "created_utc": "2026-09-07T16:17:22.842127+00:00",
+  "source": "OpenAlex works API",
+  "from_publication_year": 2012,
+  "per_page": 25,
+  "clusters": {
+    "C1_container_perf": 6,
+    "C2_time_prediction": 4,
+    "C3_degeneracy": 4,
+    "C4_routing": 3
+  },
+  "total_unique_works": 216,
+  "with_open_access_url": 127,
+  "per_cluster": {
+    "C1_container_perf": 52,
+    "C2_time_prediction": 85,
+    "C3_degeneracy": 51,
+    "C4_routing": 28
+  },
+  "query_log": [
+    {
+      "cluster": "C1_container_perf",
+      "query": "container CPU quota throttling performance",
+      "returned": 2,
+      "new": 2
+    },
+    {
+      "cluster": "C1_container_perf",
+      "query": "cgroup CPU bandwidth container",
+      "returned": 6,
+      "new": 6
+    },
+    {
+      "cluster": "C1_container_perf",
+      "query": "CPU throttling containerized application latency",
+      "returned": 1,
+      "new": 1
+    },
+    {
+      "cluster": "C1_container_perf",
+      "query": "performance interference co-located containers",
+      "returned": 25,
+      "new": 24
+    },
+    {
+      "cluster": "C1_container_perf",
+      "query": "cloud performance variability reproducible benchmarking",
+      "returned": 10,
+      "new": 9
+    },
+    {
+      "cluster": "C1_container_perf",
+      "query": "docker container performance isolation measurement",
+      "returned": 12,
+      "new": 10
+    },
+    {
+      "cluster": "C2_time_prediction",
+      "query": "query execution time prediction machine learning",
+      "returned": 25,
+      "new": 25
+    },
+    {
+      "cluster": "C2_time_prediction",
+      "query": "microservice tail latency prediction",
+      "returned": 24,
+      "new": 19
+    },
+    {
+      "cluster": "C2_time_prediction",
+      "query": "service time prediction heterogeneous nodes",
+      "returned": 25,
+      "new": 24
+    },
+    {
+      "cluster": "C2_time_prediction",
+      "query": "job runtime prediction cluster scheduling machine learning",
+      "returned": 19,
+      "new": 17
+    },
+    {
+      "cluster": "C3_degeneracy",
+      "query": "shortcut learning spurious feature benchmark",
+      "returned": 25,
+      "new": 16
+    },
+    {
+      "cluster": "C3_degeneracy",
+      "query": "simple baseline outperforms machine learning systems",
+      "returned": 25,
+      "new": 25
+    },
+    {
+      "cluster": "C3_degeneracy",
+      "query": "synthetic workload generation benchmark validity",
+      "returned": 5,
+      "new": 4
+    },
+    {
+      "cluster": "C3_degeneracy",
+      "query": "negative results machine learning evaluation pitfalls",
+      "returned": 6,
+      "new": 6
+    },
+    {
+      "cluster": "C4_routing",
+      "query": "load balancing predicted response time routing policy",
+      "returned": 7,
+      "new": 5
+    },
+    {
+      "cluster": "C4_routing",
+      "query": "payment transaction routing optimization machine learning",
+      "returned": 8,
+      "new": 8
+    },
+    {
+      "cluster": "C4_routing",
+      "query": "learning based request routing heterogeneous servers",
+      "returned": 16,
+      "new": 15
+    }
+  ]
+}

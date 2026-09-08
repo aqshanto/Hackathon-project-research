@@ -1,0 +1,888 @@
+<title>FinCluster Research Dossier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Public+Sans:wght@400;500;600&family=Noto+Sans+Bengali:wght@400;500;600&family=Noto+Serif+Bengali:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+
+<style>
+  :root {
+    --paper:        #EFF1EE;
+    --paper-raised: #F7F8F6;
+    --paper-sunk:   #E4E8E3;
+    --ink:          #171C1A;
+    --ink-soft:     #47524C;
+    --ink-faint:    #6B7770;
+    --rule:         #CFD6CF;
+    --rule-strong:  #A9B4AC;
+    --pass:         #2D6A55;
+    --pass-wash:    #DDE8E1;
+    --fail:         #A63D2F;
+    --fail-wash:    #F0DED9;
+    --open:         #8A6A1F;
+    --open-wash:    #EFE6CE;
+
+    --f-display: "Newsreader", Georgia, "Times New Roman", serif;
+    --f-body:    "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --f-bn:      "Noto Sans Bengali", "Nirmala UI", "Vrinda", sans-serif;
+    --f-bn-head: "Noto Serif Bengali", "Nirmala UI", serif;
+    --f-mono:    "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+    --col: 65ch;
+    --gutter: 7.5rem;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:        #121614;
+      --paper-raised: #1A201C;
+      --paper-sunk:   #0C100E;
+      --ink:          #E4E9E4;
+      --ink-soft:     #AAB5AD;
+      --ink-faint:    #7E8A82;
+      --rule:         #2C332E;
+      --rule-strong:  #414A44;
+      --pass:         #6FBF9C;
+      --pass-wash:    #1B2C24;
+      --fail:         #E08A76;
+      --fail-wash:    #2E1D18;
+      --open:         #D6B45F;
+      --open-wash:    #2B2415;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper:        #121614;
+    --paper-raised: #1A201C;
+    --paper-sunk:   #0C100E;
+    --ink:          #E4E9E4;
+    --ink-soft:     #AAB5AD;
+    --ink-faint:    #7E8A82;
+    --rule:         #2C332E;
+    --rule-strong:  #414A44;
+    --pass:         #6FBF9C;
+    --pass-wash:    #1B2C24;
+    --fail:         #E08A76;
+    --fail-wash:    #2E1D18;
+    --open:         #D6B45F;
+    --open-wash:    #2B2415;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--f-body);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: calc(var(--col) + var(--gutter) + 4rem);
+    margin: 0 auto;
+    padding: 0 1.5rem 6rem;
+  }
+
+  /* ---------- masthead ---------- */
+
+  .masthead {
+    padding: 4.5rem 0 2.25rem;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 2.5rem;
+  }
+
+  .eyebrow {
+    font-family: var(--f-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 1.25rem;
+  }
+
+  .masthead h1 {
+    font-family: var(--f-display);
+    font-weight: 500;
+    font-size: clamp(2.4rem, 6vw, 3.9rem);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    margin: 0 0 0.6rem;
+  }
+
+  .masthead .sub {
+    font-family: var(--f-display);
+    font-style: italic;
+    font-size: clamp(1.05rem, 2.4vw, 1.3rem);
+    color: var(--ink-soft);
+    max-width: 52ch;
+    margin: 0 0 2rem;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 2.25rem;
+    font-family: var(--f-mono);
+    font-size: 0.74rem;
+    color: var(--ink-faint);
+  }
+  .meta-row b { color: var(--ink-soft); font-weight: 500; }
+
+  /* ---------- language control ---------- */
+
+  .langbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 0;
+    background: color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .langbar .lbl {
+    font-family: var(--f-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .langbar .grp { display: flex; gap: 0; border: 1px solid var(--rule-strong); }
+
+  .langbar button {
+    font-family: var(--f-body);
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.32rem 0.85rem;
+    background: transparent;
+    color: var(--ink-soft);
+    border: 0;
+    border-right: 1px solid var(--rule-strong);
+    cursor: pointer;
+  }
+  .langbar button:last-child { border-right: 0; }
+  .langbar button:hover { background: var(--paper-sunk); color: var(--ink); }
+  .langbar button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  .langbar button:focus-visible { outline: 2px solid var(--pass); outline-offset: 2px; }
+  .langbar button.bn { font-family: var(--f-bn); }
+
+  /* ---------- phase blocks ---------- */
+
+  .phase {
+    display: grid;
+    grid-template-columns: var(--gutter) minmax(0, 1fr);
+    gap: 0 2rem;
+    padding: 2.75rem 0;
+    border-top: 1px solid var(--rule);
+  }
+  .phase:first-of-type { border-top: 0; }
+
+  .gut { padding-top: 0.4rem; }
+
+  .gut .num {
+    font-family: var(--f-mono);
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--rule-strong);
+    display: block;
+    line-height: 1;
+  }
+  .gut .date {
+    font-family: var(--f-mono);
+    font-size: 0.68rem;
+    color: var(--ink-faint);
+    display: block;
+    margin-top: 0.5rem;
+    letter-spacing: 0.03em;
+  }
+
+  .chip {
+    display: inline-block;
+    margin-top: 0.85rem;
+    font-family: var(--f-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.45rem;
+    border-radius: 2px;
+  }
+  .chip.pass { background: var(--pass-wash); color: var(--pass); }
+  .chip.fail { background: var(--fail-wash); color: var(--fail); }
+  .chip.open { background: var(--open-wash); color: var(--open); }
+
+  .body h2 {
+    font-family: var(--f-display);
+    font-weight: 500;
+    font-size: clamp(1.5rem, 3.4vw, 2rem);
+    line-height: 1.15;
+    letter-spacing: -0.014em;
+    text-wrap: balance;
+    margin: 0 0 1.4rem;
+  }
+
+  .body p { margin: 0 0 1.05rem; max-width: var(--col); }
+  .body p:last-child { margin-bottom: 0; }
+
+  .why {
+    border-left: 3px solid var(--rule-strong);
+    padding-left: 1.1rem;
+    margin: 1.5rem 0;
+    max-width: var(--col);
+  }
+  .why .tag {
+    display: block;
+    font-family: var(--f-mono);
+    font-size: 0.63rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 0.4rem;
+  }
+  .why p { margin: 0; font-family: var(--f-display); font-size: 1.06rem; }
+
+  code, .num-i {
+    font-family: var(--f-mono);
+    font-size: 0.87em;
+    background: var(--paper-sunk);
+    padding: 0.08em 0.32em;
+    border-radius: 2px;
+  }
+
+  strong { font-weight: 600; }
+
+  /* ---------- bilingual ---------- */
+
+  .bn {
+    font-family: var(--f-bn);
+    line-height: 1.9;
+  }
+  .bn h2 { font-family: var(--f-bn-head); font-weight: 600; line-height: 1.4; }
+  .bn .why p { font-family: var(--f-bn); font-size: 1rem; }
+
+  .bn-block {
+    margin-top: 1.9rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--rule);
+  }
+  .bn-block::before {
+    content: "বাংলা";
+    display: block;
+    font-family: var(--f-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.13em;
+    color: var(--ink-faint);
+    margin-bottom: 0.9rem;
+  }
+
+  :root.lang-en .bn-block { display: none; }
+  :root.lang-bn .en-block { display: none; }
+  :root.lang-bn .bn-block { margin-top: 0; padding-top: 0; border-top: 0; }
+  :root.lang-bn .bn-block::before { display: none; }
+
+  /* ---------- exhibits ---------- */
+
+  .exhibit {
+    margin: 2rem 0;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+  }
+  .exhibit > figcaption {
+    font-family: var(--f-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .exhibit .scroll { overflow-x: auto; }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.86rem;
+    font-variant-numeric: tabular-nums;
+  }
+  th, td { padding: 0.55rem 1rem; text-align: right; white-space: nowrap; }
+  th:first-child, td:first-child { text-align: left; }
+  thead th {
+    font-family: var(--f-mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    border-bottom: 1px solid var(--rule-strong);
+  }
+  tbody tr + tr td { border-top: 1px solid var(--rule); }
+  td.n { font-family: var(--f-mono); }
+  td.hi { color: var(--fail); font-weight: 500; }
+  td.ok { color: var(--pass); font-weight: 500; }
+
+  /* the 15-cell grid */
+  .grid15 td.cell {
+    font-family: var(--f-mono);
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .grid15 td.mod {
+    font-family: var(--f-mono);
+    color: var(--ink-faint);
+    text-align: center;
+  }
+  .grid15 .bar {
+    display: block;
+    height: 3px;
+    margin-top: 0.28rem;
+    background: var(--pass);
+    opacity: 0.55;
+  }
+
+  .callout {
+    margin: 2.25rem 0;
+    padding: 1.35rem 1.5rem;
+    background: var(--fail-wash);
+    border-left: 3px solid var(--fail);
+    max-width: var(--col);
+  }
+  .callout .tag {
+    display: block;
+    font-family: var(--f-mono);
+    font-size: 0.63rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--fail);
+    margin-bottom: 0.5rem;
+  }
+  .callout p { margin: 0 0 0.8rem; }
+  .callout p:last-child { margin: 0; }
+
+  .verdict {
+    display: grid;
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin: 2rem 0;
+  }
+  @media (min-width: 720px) { .verdict { grid-template-columns: repeat(3, 1fr); } }
+  .verdict .opt { background: var(--paper-raised); padding: 1.1rem 1.2rem; }
+  .verdict .opt h3 {
+    font-family: var(--f-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    margin: 0 0 0.55rem;
+    color: var(--ink-faint);
+  }
+  .verdict .opt .name {
+    font-family: var(--f-display);
+    font-size: 1.06rem;
+    line-height: 1.3;
+    display: block;
+    margin-bottom: 0.6rem;
+  }
+  .verdict .opt p { font-size: 0.87rem; margin: 0; color: var(--ink-soft); }
+  .verdict .opt.pick { background: var(--pass-wash); }
+  .verdict .opt.pick h3 { color: var(--pass); }
+
+  .end {
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--ink);
+    font-family: var(--f-mono);
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    line-height: 1.9;
+  }
+
+  @media (max-width: 700px) {
+    :root { --gutter: 3.6rem; }
+    .phase { gap: 0 1rem; }
+    .gut .num { font-size: 1.1rem; }
+    .gut .date { font-size: 0.6rem; }
+    .chip { font-size: 0.53rem; padding: 0.15rem 0.3rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">FinCluster · Research Dossier · v0.1</p>
+    <h1>What we built, what broke, and what it means</h1>
+    <p class="sub">A complete account of the FinCluster project — every decision, and the reason behind it. Written in English and Bangla.</p>
+    <div class="meta-row">
+      <span><b>Period</b> 2026-07-21 → 2026-09-07</span>
+      <span><b>Repository</b> Hackathon-project-research @ 1b762b3</span>
+      <span><b>Researcher</b> solo</span>
+      <span><b>Status</b> framing under revision</span>
+    </div>
+  </header>
+
+  <nav class="langbar" aria-label="Language">
+    <span class="lbl">Language</span>
+    <span class="grp">
+      <button type="button" data-lang="both" aria-pressed="true">Both</button>
+      <button type="button" data-lang="en" aria-pressed="false">English</button>
+      <button type="button" data-lang="bn" class="bn" aria-pressed="false">বাংলা</button>
+    </span>
+  </nav>
+
+  <!-- 01 -->
+  <section class="phase">
+    <div class="gut">
+      <span class="num">01</span>
+      <span class="date">Jul 2026</span>
+      <span class="chip pass">Shipped</span>
+    </div>
+    <div class="body">
+      <div class="en-block">
+        <h2>It started as a hackathon build</h2>
+        <p>FinCluster began as an MVP for a hackathon: a Mobile Financial Services transaction simulator. It classified each transaction as Heavy or Light, routed it across simulated nodes of differing capacity, and compared that against plain Round Robin. A Next.js dashboard showed live telemetry, node health, thermal failures, an operator review queue, and controlled retraining.</p>
+        <p>It worked. The hackathon ended. That code is still in the repository, and none of the research described below replaces it.</p>
+        <div class="why">
+          <span class="tag">Why this matters later</span>
+          <p>The MVP is application history, not evidence. Every scientific claim in this dossier comes from work done afterwards — the hackathon demo proves nothing about the research questions.</p>
+        </div>
+      </div>
+      <div class="bn-block bn">
+        <h2>শুরুটা হয়েছিল একটা হ্যাকাথন প্রজেক্ট দিয়ে</h2>
+        <p>FinCluster প্রথমে একটা হ্যাকাথনের MVP হিসেবে তৈরি হয়েছিল — Mobile Financial Services (MFS) লেনদেনের একটা সিমুলেটর। এটি প্রতিটি ট্রানজেকশনকে Heavy বা Light হিসেবে ভাগ করত, আলাদা ক্ষমতার সিমুলেটেড নোডে পাঠাত, এবং সাধারণ Round Robin-এর সাথে তুলনা করত। Next.js ড্যাশবোর্ডে লাইভ টেলিমেট্রি, নোডের অবস্থা, থার্মাল ফেইলিওর, অপারেটর রিভিউ কিউ এবং নিয়ন্ত্রিত রিট্রেনিং দেখানো হতো।</p>
+        <p>এটা কাজ করেছিল। হ্যাকাথন শেষ হলো। সেই কোড এখনো রিপোজিটরিতে আছে, এবং নিচে বর্ণিত গবেষণা সেটার বিকল্প নয়।</p>
+        <div class="why">
+          <span class="tag">পরে কেন গুরুত্বপূর্ণ</span>
+          <p>MVP হলো অ্যাপ্লিকেশনের ইতিহাস, প্রমাণ নয়। এই ডসিয়ারের প্রতিটি বৈজ্ঞানিক দাবি পরবর্তী কাজ থেকে এসেছে — হ্যাকাথন ডেমো গবেষণা-প্রশ্নের ব্যাপারে কিছুই প্রমাণ করে না।</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section class="phase">
+    <div class="gut">
+      <span class="num">02</span>
+      <span class="date">Aug 6</span>
+      <span class="chip pass">Decided</span>
+    </div>
+    <div class="body">
+      <div class="en-block">
+        <h2>A teacher asked whether it could go further</h2>
+        <p>After the hackathon, a teacher suggested checking whether the project could be improved or turned into a paper. The first instinct was the natural one: make the classifier more accurate.</p>
+        <p>That instinct was abandoned within a day, for a reason that turned out to shape everything after it.</p>
+        <div class="why">
+          <span class="tag">Why accuracy was the wrong goal</span>
+          <p>The Heavy/Light label was hand-written from transaction features — and then predicted from those same features. The model was being graded on its ability to rediscover a rule we had authored. High accuracy would have meant nothing. This is circularity, and no amount of tuning fixes it.</p>
+        </div>
+      </div>
+      <div class="bn-block bn">
+        <h2>একজন শিক্ষক জিজ্ঞেস করলেন আরও এগোনো যায় কিনা</h2>
+        <p>হ্যাকাথনের পর একজন শিক্ষক পরামর্শ দিলেন — দেখা যাক প্রজেক্টটা আরও উন্নত করা যায় কিনা, বা এটা দিয়ে একটা পেপার লেখা যায় কিনা। প্রথম চিন্তাটা স্বাভাবিকই ছিল: ক্লাসিফায়ারের অ্যাকুরেসি বাড়ানো।</p>
+        <p>কিন্তু একদিনের মধ্যেই সেই পরিকল্পনা বাদ দেওয়া হলো, এবং কারণটা পরবর্তী সবকিছুকে নির্ধারণ করে দিয়েছে।</p>
+        <div class="why">
+          <span class="tag">অ্যাকুরেসি কেন ভুল লক্ষ্য ছিল</span>
+          <p>Heavy/Light লেবেলটা আমরা নিজেরাই ট্রানজেকশন ফিচার থেকে হাতে বানিয়েছিলাম — তারপর সেই একই ফিচার দিয়েই সেটা প্রেডিক্ট করছিলাম। অর্থাৎ মডেলকে পরীক্ষা করা হচ্ছিল আমাদেরই লেখা নিয়ম আবার খুঁজে বের করার ক্ষমতা দিয়ে। বেশি অ্যাকুরেসির কোনো মানে থাকত না। একে বলে circularity, এবং যত টিউনিংই করা হোক, এটা ঠিক হয় না।</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section class="phase">
+    <div class="gut">
+      <span class="num">03</span>
+      <span class="date">Aug 7–10</span>
+      <span class="chip pass">Pivot</span>
+    </div>
+    <div class="body">
+      <div class="en-block">
+        <h2>The target changed to something we could measure</h2>
+        <p>Instead of predicting a label we invented, the project switched to predicting <code>service_time_ms</code> — the actual measured time a transaction takes to process on a controlled node. Real PaySim transaction attributes go in; a measured millisecond figure comes out.</p>
+        <p>PaySim provided the transaction distribution: <span class="num-i">6,362,620</span> rows, 11 columns, five transaction types, zero missing values. But PaySim contains no processing time, so the ground truth had to be produced by running the transactions through a reference processor we control.</p>
+        <div class="why">
+          <span class="tag">Why measurement beats labelling</span>
+          <p>A measured millisecond is observed, not authored. It can disagree with our expectations — and a target that can disagree with you is the minimum requirement for an honest experiment.</p>
+        </div>
+      </div>
+      <div class="bn-block bn">
+        <h2>টার্গেট বদলে এমন কিছু নেওয়া হলো যা মাপা যায়</h2>
+        <p>নিজেদের বানানো লেবেল প্রেডিক্ট করার বদলে প্রজেক্ট এখন প্রেডিক্ট করবে <code>service_time_ms</code> — অর্থাৎ একটা নিয়ন্ত্রিত নোডে একটা ট্রানজেকশন প্রসেস হতে বাস্তবে যত সময় লাগে। ইনপুট হিসেবে যাবে আসল PaySim ট্রানজেকশনের বৈশিষ্ট্য; আউটপুট আসবে মাপা মিলিসেকেন্ড।</p>
+        <p>PaySim থেকে পাওয়া গেল ট্রানজেকশনের ডিস্ট্রিবিউশন: <span class="num-i">৬৩,৬২,৬২০</span> সারি, ১১টি কলাম, পাঁচ ধরনের ট্রানজেকশন, কোনো মিসিং ভ্যালু নেই। কিন্তু PaySim-এ প্রসেসিং টাইম নেই, তাই ground truth তৈরি করতে হয়েছে আমাদের নিয়ন্ত্রণে থাকা একটা reference processor দিয়ে ট্রানজেকশনগুলো চালিয়ে।</p>
+        <div class="why">
+          <span class="tag">লেবেলের চেয়ে মাপা কেন ভালো</span>
+          <p>মাপা মিলিসেকেন্ড পর্যবেক্ষণ করা হয়, বানানো হয় না। এটা আমাদের প্রত্যাশার সাথে দ্বিমত করতে পারে — আর যে টার্গেট আপনার সাথে দ্বিমত করতে পারে, সেটাই সৎ পরীক্ষার সর্বনিম্ন শর্ত।</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section class="phase">
+    <div class="gut">
+      <span class="num">04</span>
+      <span class="date">Aug 16</span>
+      <span class="chip fail">Rejected</span>
+    </div>
+    <div class="body">
+      <div class="en-block">
+        <h2>Then measurement itself became the problem</h2>
+        <p>The plan was to collect data and start modelling. Instead, the measurements refused to repeat. A full 100-transaction collection ran perfectly — 1,500 successful timings, 300 aggregate rows, no failures — and was still thrown away.</p>
+        <figure class="exhibit">
+          <figcaption>v0.3 stability audit — repeated-run variation per node</figcaption>
+          <div class="scroll">
+            <table>
+              <thead><tr><th>Node</th><th>Median CV</th><th>Max CV</th><th>Pairs above 10%</th></tr></thead>
+              <tbody>
+                <tr><td>High</td><td class="n ok">1.67%</td><td class="n">20.79%</td><td class="n">12 / 100</td></tr>
+                <tr><td>Low</td><td class="n hi">28.28%</td><td class="n">53.63%</td><td class="n">86 / 100</td></tr>
+                <tr><td>Medium</td><td class="n hi">49.62%</td><td class="n">71.43%</td><td class="n">100 / 100</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </figure>
+        <p>The same transaction on the same node produced wildly different times run to run. Medium was bimodal — clustering around 20 ms and again around 70–80 ms for identical work.</p>
+        <div class="why">
+          <span class="tag">Why a complete dataset was discarded</span>
+          <p>A run that finishes without errors is not a valid dataset. If the target moves this much for identical inputs, any model trained on it learns scheduler noise, not transaction behaviour. Structural completeness and scientific validity are different tests, and this passed only the first.</p>
+        </div>
+      </div>
+      <div class="bn-block bn">
+        <h2>এরপর মাপাটাই সমস্যা হয়ে দাঁড়াল</h2>
+        <p>পরিকল্পনা ছিল ডেটা সংগ্রহ করে মডেলিং শুরু করা। কিন্তু মাপগুলো বারবার একই ফল দিচ্ছিল না। ১০০ ট্রানজেকশনের একটা পূর্ণ সংগ্রহ নিখুঁতভাবে চলল — ১,৫০০টি সফল টাইমিং, ৩০০টি অ্যাগ্রিগেট সারি, কোনো ব্যর্থতা নেই — তবুও সেটা বাতিল করা হলো।</p>
+        <p>একই নোডে একই ট্রানজেকশন প্রতিবার ভিন্ন ভিন্ন সময় নিচ্ছিল। Medium নোডে ফলাফল ছিল দ্বি-শিখর — একই কাজের জন্য কখনো প্রায় ২০ ms, কখনো ৭০–৮০ ms।</p>
+        <div class="why">
+          <span class="tag">সম্পূর্ণ ডেটাসেট কেন বাতিল করা হলো</span>
+          <p>ত্রুটি ছাড়া শেষ হওয়া মানেই বৈধ ডেটাসেট নয়। একই ইনপুটে টার্গেট যদি এতটা নড়ে, তাহলে সেই ডেটায় ট্রেন করা মডেল ট্রানজেকশনের আচরণ শেখে না — শেখে শিডিউলারের নয়েজ। কাঠামোগত সম্পূর্ণতা আর বৈজ্ঞানিক বৈধতা আলাদা পরীক্ষা, আর এটা কেবল প্রথমটায় পাস করেছিল।</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 -->
+  <section class="phase">
+    <div class="gut">
+      <span class="num">05</span>
+      <span class="date">Aug 17</span>
+      <span class="chip open">Diagnosed</span>
+    </div>
+    <div class="body">
+      <div class="en-block">
+        <h2>Finding out why the clock was lying</h2>
+        <p>Three weeks went into diagnosis. Shortening the CPU period from 100 ms to 10 ms helped but did not fix it. Node profiles were shifted from 25/50/100% CPU to 50/75/100%. Batches became internally stable — and then drifted <em>between</em> batches: the High node repeated a full run with all ten transactions slower, a systematic 11.24% shift.</p>
+        <p>Instrumenting the container with <code>cpu.stat</code> caught the mechanism in the act. During one High run, throttled periods rose from 1 to 136 — <strong>135 of 341 observed periods, about 39.6%, were throttled</strong> despite a nominal full-CPU quota. A follow-up check found the process could be scheduled across all 8 logical CPUs while holding only one CPU's worth of time budget.</p>
+        <div class="why">
+          <span class="tag">Why internal stability was not enough</span>
+          <p>A batch can be tight within itself and still sit at the wrong absolute level. Measuring variation inside one batch cannot detect that; only comparing two independent batches can. This is the single most transferable lesson of the project.</p>
+        </div>
+      </div>
+      <div class="bn-block bn">
+        <h2>ঘড়ি কেন মিথ্যা বলছিল তা খুঁজে বের করা</h2>
+        <p>তিন সপ্তাহ গেল কারণ নির্ণয়ে। CPU period ১০০ ms থেকে ১০ ms করায় উন্নতি হলো, কিন্তু সমস্যা মিটল না। নোড প্রোফাইল ২৫/৫০/১০০% CPU থেকে বদলে ৫০/৭৫/১০০% করা হলো। ব্যাচগুলো ভেতর থেকে স্থিতিশীল হলো — কিন্তু এক ব্যাচ থেকে আরেক ব্যাচে সরে যেতে লাগল: High নোডে পুনরায় চালানো ব্যাচে দশটি ট্রানজেকশনই ধীর হলো, পদ্ধতিগতভাবে ১১.২৪% সরে গেল।</p>
+        <p><code>cpu.stat</code> দিয়ে কনটেইনার পর্যবেক্ষণ করে কারণটা হাতেনাতে ধরা পড়ল। একটি High রানে throttled period ১ থেকে বেড়ে ১৩৬ হলো — <strong>৩৪১টি পর্যবেক্ষিত পিরিয়ডের মধ্যে ১৩৫টি, প্রায় ৩৯.৬%, throttle হয়েছে</strong>, যদিও কাগজে-কলমে পুরো একটি CPU বরাদ্দ ছিল। পরের পরীক্ষায় দেখা গেল, প্রসেসটি আটটি লজিক্যাল CPU-তেই চলতে পারছে, অথচ সময়ের বাজেট মাত্র একটি CPU-র সমান।</p>
+        <div class="why">
+          <span class="tag">ভেতরের স্থিতিশীলতা কেন যথেষ্ট ছিল না</span>
+          <p>একটা ব্যাচ নিজের ভেতরে খুব সুসংহত হয়েও ভুল absolute লেভেলে বসে থাকতে পারে। এক ব্যাচের ভেতরের হেরফের মেপে সেটা ধরা যায় না; ধরতে হলে দুটি স্বাধীন ব্যাচ তুলনা করতে হয়। এটাই এই প্রজেক্টের সবচেয়ে হস্তান্তরযোগ্য শিক্ষা।</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 -->
+  <section class="phase">
+    <div class="gut">
+      <span class="num">06</span>
+      <span class="date">Aug 29</span>
+      <span class="chip pass">Gate passed</span>
+    </div>
+    <div class="body">
+      <div class="en-block">
+        <h2>A rule written before the results arrived</h2>
+        <p>Before running anything, a pass/fail rule was fixed in writing: two independent batches per node, median difference between them no more than 5%, and at most 2 of 10 transaction pairs differing by more than 10%. Then containers were pinned to a single logical CPU and thread limits set to 1.</p>
+        <figure class="exhibit">
+          <figcaption>v0.6 decision gate — declared before the batches ran</figcaption>
+          <div class="scroll">
+            <table>
+              <thead><tr><th>Profile</th><th>Median A/B difference</th><th>Pairs above 10%</th><th>Verdict</th></tr></thead>
+              <tbody>
+                <tr><td>Low 50% CPU</td><td class="n hi">6.18%</td><td class="n">2</td><td class="hi">Fail</td></tr>
+                <tr><td>Low 60% CPU</td><td class="n ok">2.08%</td><td class="n">0</td><td class="ok">Pass</td></tr>
+                <tr><td>Medium 75% CPU</td><td class="n ok">1.98%</td><td class="n">0</td><td class="ok">Pass</td></tr>
+                <tr><td>High 100% CPU</td><td class="n ok">1.52%</td><td class="n">0</td><td class="ok">Pass</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </figure>
+        <p>Low at 50% failed the rule and was not argued with — it was replaced by a 60% profile, which passed. The gate was then closed and the final collection began: 1,000 transactions, 15,000 raw timings, 3,000 transaction-node rows, split 700/150/150 by transaction with zero leakage, hashed and frozen with a snapshot of the code that produced it.</p>
+        <div class="why">
+          <span class="tag">Why the rule came first</span>
+          <p>A threshold chosen after seeing results is not a threshold, it is a justification. Fixing the rule beforehand is what converts "the numbers looked acceptable" into evidence someone else can check.</p>
+        </div>
+      </div>
+      <div class="bn-block bn">
+        <h2>ফলাফল আসার আগেই লিখে রাখা নিয়ম</h2>
+        <p>কিছু চালানোর আগেই একটা pass/fail নিয়ম লিখে ঠিক করা হলো: প্রতি নোডে দুটি স্বাধীন ব্যাচ, তাদের মধ্যকার median পার্থক্য ৫%-এর বেশি নয়, এবং ১০টি ট্রানজেকশন জোড়ার মধ্যে সর্বোচ্চ ২টিতে ১০%-এর বেশি পার্থক্য। এরপর কনটেইনারগুলোকে একটিমাত্র লজিক্যাল CPU-তে পিন করা হলো এবং থ্রেড লিমিট ১ করা হলো।</p>
+        <p>Low ৫০%-এ নিয়মটা ফেল করল, এবং সেটা নিয়ে তর্ক করা হয়নি — বদলে ৬০% প্রোফাইল নেওয়া হলো, যেটা পাস করল। এরপর গেট বন্ধ করে চূড়ান্ত সংগ্রহ শুরু হলো: ১,০০০ ট্রানজেকশন, ১৫,০০০ কাঁচা টাইমিং, ৩,০০০ ট্রানজেকশন-নোড সারি, ট্রানজেকশন অনুযায়ী ৭০০/১৫০/১৫০ ভাগ, কোনো leakage ছাড়া, হ্যাশসহ ফ্রিজ করা এবং যে কোড দিয়ে তৈরি তার স্ন্যাপশটসহ সংরক্ষিত।</p>
+        <div class="why">
+          <span class="tag">নিয়মটা কেন আগে লেখা হলো</span>
+          <p>ফলাফল দেখার পর বেছে নেওয়া থ্রেশহোল্ড আসলে থ্রেশহোল্ড নয়, সেটা একটা সাফাই। আগে থেকে নিয়ম ঠিক করাই "সংখ্যাগুলো গ্রহণযোগ্য মনে হলো"-কে এমন প্রমাণে রূপান্তর করে যা অন্য কেউ যাচাই করতে পারে।</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 -->
+  <section class="phase">
+    <div class="gut">
+      <span class="num">07</span>
+      <span class="date">Aug 30</span>
+      <span class="chip fail">Degenerate</span>
+    </div>
+    <div class="body">
+      <div class="en-block">
+        <h2>The models trained — and the result was hollow</h2>
+        <p>With a defensible dataset in hand, regression screening finally ran. It produced a clean, high-scoring, and deeply uncomfortable answer.</p>
+        <figure class="exhibit">
+          <figcaption>Validation screening — best model per feature set</figcaption>
+          <div class="scroll">
+            <table>
+              <thead><tr><th>Features</th><th>Best model</th><th>MAE (ms)</th><th>R²</th></tr></thead>
+              <tbody>
+                <tr><td>type + node</td><td>RandomForest</td><td class="n ok">0.922</td><td class="n">0.984</td></tr>
+                <tr><td>+ amount, balances, step</td><td>HistGradientBoosting</td><td class="n">0.997</td><td class="n">0.981</td></tr>
+                <tr><td>node alone</td><td>RandomForest</td><td class="n hi">5.735</td><td class="n">0.528</td></tr>
+                <tr><td>type + node <em>(no ML — lookup table)</em></td><td>Median lookup</td><td class="n ok">0.898</td><td class="n">0.984</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </figure>
+        <p>Adding amount and balances made predictions <em>worse</em>. And a plain lookup table — no learning at all — beat every trained model.</p>
+        <p>The reason is visible the moment the training medians are laid out as a grid. Service time is a clean product of transaction type and node, and the type axis tracks the processor's workflow-module count exactly.</p>
+        <figure class="exhibit">
+          <figcaption>The whole target — 15 cells, median ms (train split)</figcaption>
+          <div class="scroll">
+            <table class="grid15">
+              <thead><tr><th>Type</th><th>Modules</th><th>High</th><th>Medium</th><th>Low</th></tr></thead>
+              <tbody>
+                <tr><td>CASH_IN</td><td class="mod">2</td><td class="cell">21.17<span class="bar" style="width:37%"></span></td><td class="cell">27.79<span class="bar" style="width:48%"></span></td><td class="cell">34.94<span class="bar" style="width:60%"></span></td></tr>
+                <tr><td>PAYMENT</td><td class="mod">3</td><td class="cell">24.60<span class="bar" style="width:43%"></span></td><td class="cell">31.61<span class="bar" style="width:55%"></span></td><td class="cell">39.84<span class="bar" style="width:69%"></span></td></tr>
+                <tr><td>CASH_OUT</td><td class="mod">4</td><td class="cell">28.01<span class="bar" style="width:48%"></span></td><td class="cell">36.89<span class="bar" style="width:64%"></span></td><td class="cell">46.27<span class="bar" style="width:80%"></span></td></tr>
+                <tr><td>DEBIT</td><td class="mod">5</td><td class="cell">31.74<span class="bar" style="width:55%"></span></td><td class="cell">40.53<span class="bar" style="width:70%"></span></td><td class="cell">51.48<span class="bar" style="width:89%"></span></td></tr>
+                <tr><td>TRANSFER</td><td class="mod">6</td><td class="cell">35.41<span class="bar" style="width:61%"></span></td><td class="cell">45.82<span class="bar" style="width:79%"></span></td><td class="cell">57.83<span class="bar" style="width:100%"></span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </figure>
+        <div class="callout">
+          <span class="tag">The core finding</span>
+          <p>The reference processor sets workload from transaction type alone: 80,000 shared PBKDF2 iterations plus 20,000 per workflow module — 2 for CASH_IN rising to 6 for TRANSFER. The transaction <em>amount</em> never touches compute cost.</p>
+          <p>So <code>service_time_ms</code> is a 5 × 3 lookup <strong>by construction</strong>. The prediction task was decided by the design of the workload generator, not by anything a model could discover. RQ1 — "which model predicts service time best" — cannot be meaningfully answered on this data.</p>
+        </div>
+        <div class="why">
+          <span class="tag">Why this is worth reporting rather than hiding</span>
+          <p>The failure is precise, mechanically explained, and supported by an ablation and a non-ML baseline. That is a stronger scientific object than a leaderboard of near-identical R² scores would have been.</p>
+        </div>
+      </div>
+      <div class="bn-block bn">
+        <h2>মডেল ট্রেন হলো — আর ফলাফল ফাঁপা বেরোল</h2>
+        <p>নির্ভরযোগ্য ডেটাসেট হাতে নিয়ে অবশেষে regression screening চালানো হলো। ফলাফল এল পরিষ্কার, উঁচু স্কোরের, এবং গভীরভাবে অস্বস্তিকর।</p>
+        <p>amount আর balance যোগ করায় প্রেডিকশন বরং <em>খারাপ</em> হলো। আর একটা সাধারণ lookup table — কোনো লার্নিং ছাড়াই — সব ট্রেইনড মডেলকে হারিয়ে দিল।</p>
+        <p>ট্রেনিং median-গুলো গ্রিড আকারে সাজালেই কারণটা চোখে পড়ে। service time হলো ট্রানজেকশন টাইপ আর নোডের একটা পরিচ্ছন্ন গুণফল, আর টাইপ-অক্ষটা হুবহু প্রসেসরের workflow module সংখ্যা অনুসরণ করে।</p>
+        <div class="callout">
+          <span class="tag">মূল আবিষ্কার</span>
+          <p>Reference processor কেবল ট্রানজেকশন টাইপ থেকেই কাজের পরিমাণ ঠিক করে: ৮০,০০০ সাধারণ PBKDF2 iteration, আর প্রতি workflow module-এ ২০,০০০ — CASH_IN-এ ২টি থেকে TRANSFER-এ ৬টি। ট্রানজেকশনের <em>amount</em> কম্পিউট খরচে কোনো প্রভাবই ফেলে না।</p>
+          <p>ফলে <code>service_time_ms</code> আসলে একটা ৫ × ৩ lookup — <strong>গঠনগতভাবেই</strong>। প্রেডিকশনের কাজটা নির্ধারিত হয়ে গিয়েছিল workload generator-এর ডিজাইন দিয়ে, মডেলের আবিষ্কার করার মতো কিছু দিয়ে নয়। RQ1 — "কোন মডেল service time সবচেয়ে ভালো প্রেডিক্ট করে" — এই ডেটায় অর্থপূর্ণভাবে উত্তর দেওয়া যায় না।</p>
+        </div>
+        <div class="why">
+          <span class="tag">এটা লুকানোর বদলে প্রকাশ করা কেন জরুরি</span>
+          <p>ব্যর্থতাটা সুনির্দিষ্ট, যান্ত্রিকভাবে ব্যাখ্যাযোগ্য, এবং একটা ablation ও একটা non-ML baseline দিয়ে সমর্থিত। প্রায় একই রকম R² স্কোরের তালিকার চেয়ে এটা অনেক শক্তিশালী বৈজ্ঞানিক বস্তু।</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 -->
+  <section class="phase">
+    <div class="gut">
+      <span class="num">08</span>
+      <span class="date">Aug 30</span>
+      <span class="chip open">Preliminary</span>
+    </div>
+    <div class="body">
+      <div class="en-block">
+        <h2>Adding queue state put the problem back</h2>
+        <p>If the workload generator makes service time trivial, the fix is to predict something the generator does not fully determine. The <code>queue_aware_v1</code> experiment changed the target to <code>completion_time_ms</code> — queue wait plus service time — and gave the model two things a router can actually observe before routing: active workers and queue length.</p>
+        <figure class="exhibit">
+          <figcaption>Queue-aware screening — validation</figcaption>
+          <div class="scroll">
+            <table>
+              <thead><tr><th>Features</th><th>MAE (ms)</th><th>R²</th></tr></thead>
+              <tbody>
+                <tr><td>type + node + workers + queue length</td><td class="n ok">2.343</td><td class="n">0.987</td></tr>
+                <tr><td>type + node</td><td class="n hi">22.183</td><td class="n">0.135</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </figure>
+        <p>Queue state carries roughly ten times the predictive weight. More importantly for routing: the High node is <strong>not</strong> the best choice 31.9% of the time. The routing decision stops being a constant.</p>
+        <div class="why">
+          <span class="tag">Why this is promising but not yet a result</span>
+          <p>The queue simulator is driven by service times drawn from our own training split, so the model is partly predicting its own generator. That must be stated openly — it is a milder version of the circularity the project escaped in step 02, and a reviewer will look for it.</p>
+        </div>
+      </div>
+      <div class="bn-block bn">
+        <h2>Queue state যোগ করায় সমস্যাটা ফিরে এল</h2>
+        <p>Workload generator যদি service time-কে তুচ্ছ করে দেয়, তাহলে সমাধান হলো এমন কিছু প্রেডিক্ট করা যা generator পুরোপুরি নির্ধারণ করে না। <code>queue_aware_v1</code> পরীক্ষায় টার্গেট বদলে করা হলো <code>completion_time_ms</code> — queue wait যোগ service time — এবং মডেলকে দেওয়া হলো এমন দুটি তথ্য যা রাউটার রাউটিংয়ের আগেই দেখতে পায়: active worker সংখ্যা আর queue length।</p>
+        <p>Queue state প্রায় দশ গুণ বেশি ভবিষ্যদ্বাণী-ক্ষমতা বহন করে। রাউটিংয়ের জন্য আরও গুরুত্বপূর্ণ: ৩১.৯% ক্ষেত্রে High নোড সেরা পছন্দ <strong>নয়</strong>। রাউটিং সিদ্ধান্তটা আর ধ্রুবক থাকে না।</p>
+        <div class="why">
+          <span class="tag">এটা আশাব্যঞ্জক কিন্তু এখনো ফলাফল নয় কেন</span>
+          <p>Queue simulator চালানো হয়েছে আমাদের নিজেদের ট্রেনিং স্প্লিট থেকে নেওয়া service time দিয়ে, ফলে মডেল আংশিকভাবে নিজের generator-কেই প্রেডিক্ট করছে। এটা খোলাখুলি বলতে হবে — ধাপ ০২-এ যে circularity থেকে প্রজেক্ট বেরিয়ে এসেছিল, এটা তারই একটা মৃদু সংস্করণ, এবং রিভিউয়ার এটা খুঁজবেন।</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 -->
+  <section class="phase">
+    <div class="gut">
+      <span class="num">09</span>
+      <span class="date">Sep 7</span>
+      <span class="chip open">Current</span>
+    </div>
+    <div class="body">
+      <div class="en-block">
+        <h2>What a first literature check says</h2>
+        <p>No thorough literature review has been done — that is the current gap, and the immediate next task. A preliminary search returns three signals worth acting on.</p>
+        <p><strong>Container CPU throttling is thoroughly documented already.</strong> Including the specific mitigation of shortening the CFS period, which cost days of independent diagnosis in August. That work was verification, not discovery, and cannot be presented as novel.</p>
+        <p><strong>The degeneracy pattern has a name but not this application.</strong> Shortcut learning is well studied, and at least one recent paper reports synthetic benchmarks whose answers were recoverable by trivial baselines — but in a different domain. No prior work was found showing this for container-based transaction service-time measurement with the mechanism traced to the workload generator.</p>
+        <p><strong>ML for payment routing exists, but targets different quantities</strong> — provider success rates and settlement time, not compute service time across heterogeneous nodes.</p>
+        <div class="why">
+          <span class="tag">Why this changes the paper's shape</span>
+          <p>The measurement protocol cannot be the contribution; that ground is taken. The protocol becomes the apparatus that makes a finding trustworthy, and the degeneracy result becomes the claim.</p>
+        </div>
+      </div>
+      <div class="bn-block bn">
+        <h2>প্রাথমিক সাহিত্য-অনুসন্ধান কী বলছে</h2>
+        <p>এখনো পূর্ণাঙ্গ literature review করা হয়নি — এটাই বর্তমান ঘাটতি এবং পরবর্তী তাৎক্ষণিক কাজ। প্রাথমিক অনুসন্ধানে তিনটি ইঙ্গিত পাওয়া গেছে যেগুলোর ভিত্তিতে কাজ করা দরকার।</p>
+        <p><strong>Container CPU throttling নিয়ে ইতিমধ্যেই বিস্তারিত কাজ আছে।</strong> এর মধ্যে CFS period ছোট করার নির্দিষ্ট সমাধানটিও আছে, যেটা বের করতে আগস্টে কয়েকদিন লেগেছিল। সেই কাজটা ছিল যাচাই, আবিষ্কার নয় — তাই একে নতুন বলে দাবি করা যাবে না।</p>
+        <p><strong>Degeneracy প্যাটার্নটির নাম আছে, কিন্তু এই প্রয়োগে নয়।</strong> Shortcut learning নিয়ে ভালো গবেষণা আছে, এবং সাম্প্রতিক অন্তত একটি পেপারে এমন synthetic benchmark-এর কথা আছে যেগুলোর উত্তর তুচ্ছ baseline দিয়েই বের করা যেত — তবে ভিন্ন ক্ষেত্রে। কনটেইনার-ভিত্তিক ট্রানজেকশন service-time মাপার ক্ষেত্রে, যেখানে কারণটা workload generator পর্যন্ত চিহ্নিত করা হয়েছে — এমন পূর্ববর্তী কাজ পাওয়া যায়নি।</p>
+        <p><strong>পেমেন্ট রাউটিংয়ে ML আছে, কিন্তু লক্ষ্য ভিন্ন</strong> — প্রোভাইডারের success rate ও settlement time, ভিন্ন ক্ষমতার নোডে compute service time নয়।</p>
+        <div class="why">
+          <span class="tag">এতে পেপারের আকার কেন বদলায়</span>
+          <p>Measurement protocol-টা মূল অবদান হতে পারবে না; সেই জায়গা আগেই দখল হয়ে আছে। Protocol হবে সেই যন্ত্র যা আবিষ্কারটিকে বিশ্বাসযোগ্য করে, আর degeneracy-র ফলাফলটাই হবে দাবি।</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 -->
+  <section class="phase">
+    <div class="gut">
+      <span class="num">10</span>
+      <span class="date">Next</span>
+      <span class="chip open">Decision</span>
+    </div>
+    <div class="body">
+      <div class="en-block">
+        <h2>Three papers are hiding in this work</h2>
+        <p>Given a solo researcher with under two months and open-access literature only, these are the options and the honest verdict on each.</p>
+        <div class="verdict">
+          <div class="opt">
+            <h3>Option A</h3>
+            <span class="name">Which model predicts service time best?</span>
+            <p>The original RQ1. Already answered, and the answer is a lookup table. Fixing it means redesigning the processor and re-collecting 15,000 measurements — three weeks that do not exist.</p>
+          </div>
+          <div class="opt pick">
+            <h3>Option B · recommended</h3>
+            <span class="name">The degeneracy result, with the protocol as apparatus</span>
+            <p>Every experiment is finished and hash-verified. Nothing left but writing and positioning. The one candidate that fits the timeline.</p>
+          </div>
+          <div class="opt">
+            <h3>Option C</h3>
+            <span class="name">Queue-aware completion-time routing</span>
+            <p>The better science, and the natural home for the routing questions. But it needs simulator validation, three routing baselines and system-level evaluation. Too large for now — it becomes the future-work section.</p>
+          </div>
+        </div>
+        <p>Working framing for Option B: <em>a controlled measurement study showing that node-aware transaction service-time prediction becomes degenerate when the reference workload is generated from the transaction category.</em></p>
+        <div class="why">
+          <span class="tag">Why the negative result is the strongest asset</span>
+          <p>It is the only part of this project that is both finished and not already in the literature. Everything else is either well-trodden ground or unfinished work.</p>
+        </div>
+      </div>
+      <div class="bn-block bn">
+        <h2>এই কাজের ভেতরে তিনটি পেপার লুকিয়ে আছে</h2>
+        <p>একজন একক গবেষক, দুই মাসের কম সময়, এবং কেবল open-access সাহিত্য — এই বাস্তবতায় বিকল্পগুলো এবং প্রতিটির সৎ মূল্যায়ন নিচে।</p>
+        <p><strong>বিকল্প A — কোন মডেল service time সবচেয়ে ভালো প্রেডিক্ট করে?</strong> মূল RQ1। উত্তর ইতিমধ্যেই পাওয়া গেছে, আর উত্তরটা হলো একটা lookup table। ঠিক করতে হলে প্রসেসর নতুন করে ডিজাইন করে ১৫,০০০ মাপ আবার নিতে হবে — সেই তিন সপ্তাহ হাতে নেই।</p>
+        <p><strong>বিকল্প B — প্রস্তাবিত।</strong> Degeneracy-র ফলাফল, আর protocol থাকবে যন্ত্র হিসেবে। সব পরীক্ষা শেষ ও hash দিয়ে যাচাই করা। বাকি আছে কেবল লেখা আর অবস্থান নির্ধারণ। সময়সীমার মধ্যে একমাত্র সম্ভব বিকল্প।</p>
+        <p><strong>বিকল্প C — Queue-aware completion-time রাউটিং।</strong> বিজ্ঞান হিসেবে বেশি ভালো, এবং রাউটিং প্রশ্নগুলোর স্বাভাবিক ঠিকানা। কিন্তু এর জন্য দরকার simulator যাচাই, তিনটি রাউটিং baseline এবং system-level মূল্যায়ন। এখনকার জন্য অনেক বড় — এটা future work অংশে যাবে।</p>
+        <div class="why">
+          <span class="tag">নেতিবাচক ফলাফলই কেন সবচেয়ে বড় সম্পদ</span>
+          <p>এই প্রজেক্টে এটাই একমাত্র অংশ যা একইসাথে সম্পূর্ণ এবং সাহিত্যে এখনো অনুপস্থিত। বাকি সবকিছু হয় বহু-চর্চিত জমি, নয়তো অসমাপ্ত কাজ।</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 -->
+  <section class="phase">
+    <div class="gut">
+      <span class="num">11</span>
+      <span class="date">Rules</span>
+      <span class="chip pass">Standing</span>
+    </div>
+    <div class="body">
+      <div class="en-block">
+        <h2>What must not happen next</h2>
+        <p>Four constraints hold regardless of which option is chosen.</p>
+        <p><strong>The test set stays sealed.</strong> 150 transactions, 450 rows, never loaded. It is used once, at the end, after the research questions are frozen — not for tuning, not for checking whether results look better.</p>
+        <p><strong>The frozen dataset is not modified.</strong> Including the 48 outlier-flagged rows, which stay in. Removing inconvenient rows after seeing results is the same error as choosing a threshold after seeing results.</p>
+        <p><strong>The split is not reshuffled.</strong> Not if model numbers disappoint.</p>
+        <p><strong>Diagnostic evidence is preserved.</strong> All v0.3, v0.4 and v0.5 data stays in the archive. The failures are part of the record, and in Option B they are part of the argument.</p>
+      </div>
+      <div class="bn-block bn">
+        <h2>এরপর যা করা যাবে না</h2>
+        <p>কোন বিকল্প বেছে নেওয়া হোক না কেন, চারটি শর্ত বহাল থাকবে।</p>
+        <p><strong>Test set সিল করা থাকবে।</strong> ১৫০ ট্রানজেকশন, ৪৫০ সারি, কখনো লোড করা হয়নি। গবেষণা-প্রশ্ন চূড়ান্ত হওয়ার পর, একেবারে শেষে, একবারই ব্যবহার হবে — টিউনিংয়ের জন্য নয়, ফলাফল ভালো দেখাচ্ছে কিনা দেখার জন্যও নয়।</p>
+        <p><strong>Frozen ডেটাসেট বদলানো হবে না।</strong> outlier চিহ্নিত ৪৮টি সারিসহ, যেগুলো থেকে যাবে। ফলাফল দেখার পর অসুবিধাজনক সারি বাদ দেওয়া আর ফলাফল দেখার পর থ্রেশহোল্ড বাছাই — একই ভুল।</p>
+        <p><strong>Split আবার এলোমেলো করা হবে না।</strong> মডেলের সংখ্যা হতাশ করলেও নয়।</p>
+        <p><strong>Diagnostic প্রমাণ সংরক্ষিত থাকবে।</strong> v0.3, v0.4 ও v0.5-এর সব ডেটা আর্কাইভে থাকবে। ব্যর্থতাগুলো রেকর্ডের অংশ, আর বিকল্প B-তে সেগুলো যুক্তিরও অংশ।</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="end">
+    FinCluster Research Dossier v0.1 · compiled 2026-09-07 from repository evidence at commit 1b762b3<br>
+    Every figure in this document is drawn from a file in the research repository. No number here is an estimate.<br>
+    Next action: a targeted literature review across container performance variability, execution-time prediction, benchmark degeneracy, and payment routing.
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var buttons = document.querySelectorAll(".langbar button");
+    function setLang(lang) {
+      root.classList.remove("lang-en", "lang-bn", "lang-both");
+      root.classList.add("lang-" + lang);
+      buttons.forEach(function (b) {
+        b.setAttribute("aria-pressed", String(b.dataset.lang === lang));
+      });
+      try { localStorage.setItem("fincluster-lang", lang); } catch (e) {}
+    }
+    buttons.forEach(function (b) {
+      b.addEventListener("click", function () { setLang(b.dataset.lang); });
+    });
+    var saved = "both";
+    try { saved = localStorage.getItem("fincluster-lang") || "both"; } catch (e) {}
+    setLang(saved);
+  })();
+</script>

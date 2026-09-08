@@ -1,0 +1,68 @@
+{
+  "created_utc": "2026-09-08T06:06:59.614941+00:00",
+  "seeds_found": 10,
+  "seeds_missing": 0,
+  "new_unique_works": 508,
+  "per_seed": [
+    {
+      "seed": "Predicting query execution time: Are optimizer cost models really unusable?",
+      "openalex_id": "W2109907545",
+      "backward_new": 31,
+      "forward_new": 46
+    },
+    {
+      "seed": "Same Queries, Different Data: Can We Predict Runtime Performance?",
+      "openalex_id": "W2014294093",
+      "backward_new": 19,
+      "forward_new": 29
+    },
+    {
+      "seed": "Towards predicting query execution time for concurrent and dynamic database workloads",
+      "openalex_id": "W2103702871",
+      "backward_new": 16,
+      "forward_new": 29
+    },
+    {
+      "seed": "Predicting the End-to-End Tail Latency of Containerized Microservices in the Cloud",
+      "openalex_id": "W2967691202",
+      "backward_new": 25,
+      "forward_new": 48
+    },
+    {
+      "seed": "Runtime prediction of parallel applications with workload-aware clustering",
+      "openalex_id": "W2604858411",
+      "backward_new": 29,
+      "forward_new": 27
+    },
+    {
+      "seed": "Interference Analysis of Co-Located Container Workloads: A Perspective from Hardware Performance Counters",
+      "openalex_id": "W3026934022",
+      "backward_new": 6,
+      "forward_new": 11
+    },
+    {
+      "seed": "Rusty: Runtime Interference-Aware Predictive Monitoring for Modern Multi-Tenant Systems",
+      "openalex_id": "W3046986616",
+      "backward_new": 67,
+      "forward_new": 47
+    },
+    {
+      "seed": "KVM, Xen and Docker: A performance analysis for ARM based NFV and cloud computing",
+      "openalex_id": "W2532817307",
+      "backward_new": 29,
+      "forward_new": 49
+    },
+    {
+      "seed": "Shortcut to Nowhere: Demystifying Deep Spurious Regression",
+      "openalex_id": "W7163595170",
+      "backward_new": 0,
+      "forward_new": 0
+    },
+    {
+      "seed": "SynQL: A Controllable and Scalable Rule-Based Framework for SQL Workload Synthesis for Performance Benchmarking",
+      "openalex_id": "W7153670905",
+      "backward_new": 0,
+      "forward_new": 0
+    }
+  ]
+}
